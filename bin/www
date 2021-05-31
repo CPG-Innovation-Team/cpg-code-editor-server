@@ -3,8 +3,7 @@
 const app = require('../app');
 const debug = require('debug')('cpg-code-editor-server:server');
 const http = require('http');
-const stringRandom = require('string-random');
-const { Server } = require('socket.io');
+const socket = require('../socket');
 
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
@@ -15,47 +14,7 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-
-const io = new Server(server, {
-  cors: {
-    origin: '*', // Only for debug
-    methods: ["GET", "POST"]
-  }
-});
-
-const roomObj = {};
-
-function generateRoomId() {
-  let roomId = stringRandom(5);
-  if (roomObj[roomId]) {
-    roomId = generateRoomId();
-  }
-  return roomId;
-};
-
-io.on('connection', (socket) => {
-  console.log('user connected, socketId: ' + socket.id);
-  socket.on('disconnect', () => {
-    console.log('user disconnected, socketId: ' + socket.id);
-  });
-
-  socket.on('clientUploadCode', (res) => {
-    let roomId = res.roomId;
-    if (!roomId) {
-      roomId = generateRoomId();
-    }
-    socket.join(roomId);
-    roomObj[roomId] = res.code;
-    console.log('room: ' + roomId + ' update code: ' + res.code);
-    io.to(roomId).emit('serverCodeSync', { roomId, code: res.code });
-  });
-
-  socket.on('clientEnterRoom', (roomId) => {
-    console.log('client join room: ' + roomId + ' socketId: ' + socket.id);
-    socket.join(roomId);
-    io.to(roomId).emit('serverCodeSync', { roomId, code: roomObj[roomId] });
-  });
-});
+socket.getSocketIO(server);
 
 /**
  * Normalize a port into a number, string, or false.
