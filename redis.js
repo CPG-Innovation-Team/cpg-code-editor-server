@@ -1,20 +1,20 @@
 const redis = require('redis');
+const { promisify } = require('util');
 const client = redis.createClient();
+
+const hget = promisify(client.hget).bind(client);
+const hmset = promisify(client.hmset).bind(client);
 
 client.on('error', function (err) {
   console.error('Redis error: ' + err);
 });
 
-function updateCode(roomId, code, callback) {
-  client.hmset(roomId, ['code', code, 'updateTime', Date.now()], (err, res) => {
-    callback(err, res);
-  });
+async function getCode(roomId) {
+  return await hget(roomId, 'code');
 }
 
-function getCode(roomId, callback) {
-  client.hget(roomId, 'code', (err, res) => {
-    callback(err, res);
-  });
+async function updateCode(roomId, code) {
+  return await hmset(roomId, ['code', code, 'updateTime', Date.now()]);
 }
 
 module.exports = { updateCode, getCode };
