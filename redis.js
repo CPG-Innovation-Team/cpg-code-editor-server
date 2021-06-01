@@ -4,6 +4,7 @@ const client = redis.createClient();
 
 const hget = promisify(client.hget).bind(client);
 const hmset = promisify(client.hmset).bind(client);
+const exists = promisify(client.exists).bind(client);
 
 client.on('error', function (err) {
   console.error('Redis error: ' + err);
@@ -17,4 +18,8 @@ async function updateCode(roomId, code) {
   return await hmset(roomId, ['code', code, 'updateTime', Date.now()]);
 }
 
-module.exports = { updateCode, getCode };
+async function roomExistQuery(roomId) {
+  return await exists(roomId);
+}
+
+module.exports = { updateCode, getCode, roomExistQuery };

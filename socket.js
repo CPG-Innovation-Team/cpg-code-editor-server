@@ -1,15 +1,20 @@
 const stringRandom = require('string-random');
+const { getCode, updateCode, roomExistQuery } = require('./redis');
 const { Server } = require('socket.io');
 
 const socketExport = {};
-const roomObj = {};
 
-function generateRoomId() {
+async function generateRoomId() {
   let roomId = stringRandom(5);
-  if (roomObj[roomId]) {
-    roomId = generateRoomId();
-  }
-  return roomId;
+  const roomExist = await roomExistQuery(roomId);
+
+  return new Promise((resolve) => {
+    if (roomExist) {
+      resolve(generateRoomId());
+    } else {
+      resolve(roomId);
+    }
+  });
 }
 
 socketExport.getSocketIO = function (server) {
@@ -26,21 +31,40 @@ socketExport.getSocketIO = function (server) {
       console.log('user disconnected, socketId: ' + socket.id);
     });
 
-    socket.on('clientUploadCode', (res) => {
-      let roomId = res.roomId;
+    socket.on('clientUploadCode', async (socketRes) => {
+      let roomId = socketRes.roomId;
       if (!roomId) {
-        roomId = generateRoomId();
+        roomId = await generateRoomId();
+        console.log('create new room: ' + roomId);
       }
       socket.join(roomId);
-      roomObj[roomId] = res.code;
-      console.log('room: ' + roomId + ' update code: ' + res.code);
-      io.to(roomId).emit('serverCodeSync', { roomId, code: res.code });
+
+      updateCode(roomId, socketRes.code)
+        .then((redisRes) => {
+          console.log('redis update code: ' + redisRes);
+          console.log('room: ' + roomId + ' update code: ' + socketRes.code);
+          io.to(roomId).emit('serverCodeSync', {
+            roomId,
+            code: socketRes.code,
+          });
+        })
+        .catch((err) => {
+          console.log('update code error:' + err);
+        });
     });
 
     socket.on('clientEnterRoom', (roomId) => {
       console.log('client join room: ' + roomId + ' socketId: ' + socket.id);
       socket.join(roomId);
-      io.to(roomId).emit('serverCodeSync', { roomId, code: roomObj[roomId] });
+
+      getCode(roomId)
+        .then((code) => {
+          console.log('redis get code: ' + code);
+          io.to(roomId).emit('serverCodeSync', { roomId, code });
+        })
+        .catch((err) => {
+          console.log('get code error: ' + err);
+        });
     });
   });
 };
