@@ -1,13 +1,13 @@
 const redis = require('redis');
 const { promisify } = require('util');
+
 const client = redis.createClient();
+const exists = promisify(client.exists).bind(client);
 
 const EXPIRE_TIME = 259200; // Expire time for recycling unused room
 
-const exists = promisify(client.exists).bind(client);
-
-client.on('error', function (err) {
-  console.error('Redis error: ' + err);
+client.on('error', (err) => {
+  console.error(`Redis error: ${err}`);
 });
 
 async function getCode(roomId) {
@@ -43,7 +43,7 @@ async function updateCode(roomId, code) {
 }
 
 async function roomExistQuery(roomId) {
-  return await exists(roomId);
+  return exists(roomId);
 }
 
 module.exports = { updateCode, getCode, roomExistQuery };
