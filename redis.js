@@ -2,8 +2,8 @@ const redis = require('redis');
 const { promisify } = require('util');
 const client = redis.createClient();
 
-const hget = promisify(client.hget).bind(client);
-const hmset = promisify(client.hmset).bind(client);
+const EXPIRE_TIME = 259200; // Expire time for recycling unused room
+
 const exists = promisify(client.exists).bind(client);
 
 client.on('error', function (err) {
@@ -11,11 +11,37 @@ client.on('error', function (err) {
 });
 
 async function getCode(roomId) {
-  return await hget(roomId, 'code');
+  return new Promise((resolve, reject) => {
+    client
+      .multi()
+      .hget(roomId, 'code')
+      .expire(roomId, EXPIRE_TIME)
+      .exec((err, result) => {
+        console.log('err: ' + err + 'result: ' + result);
+
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result[0]);
+        }
+      });
+  });
 }
 
 async function updateCode(roomId, code) {
-  return await hmset(roomId, ['code', code, 'updateTime', Date.now()]);
+  return new Promise((resolve, reject) => {
+    client
+      .multi()
+      .hmset(roomId, ['code', code, 'updateTime', Date.now()])
+      .expire(roomId, EXPIRE_TIME)
+      .exec((err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result[0]);
+        }
+      });
+  });
 }
 
 async function roomExistQuery(roomId) {
