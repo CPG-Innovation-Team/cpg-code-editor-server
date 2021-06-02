@@ -17,8 +17,6 @@ async function getCode(roomId) {
       .hget(roomId, 'code')
       .expire(roomId, EXPIRE_TIME)
       .exec((err, result) => {
-        console.log('err: ' + err + 'result: ' + result);
-
         if (err) {
           reject(err);
         } else {
