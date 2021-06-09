@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
-    "eslint": "eslint *.js ./bin/**",
+    "dev": "nodemon ./bin/www",
+    "prod": "pm2 start ./bin/www",
+    "lint": "eslint *.js ./bin/**",
     "test": "jest"
   },
   "dependencies": {
@@ -14,6 +15,7 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
+    "pm2": "^5.0.4",
     "redis": "^3.1.2",
     "socket.io": "^4.1.2",
     "string-random": "^0.1.3"
