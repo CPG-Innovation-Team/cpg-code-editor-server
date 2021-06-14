@@ -1,4 +1,5 @@
 {
   "collectCoverage": true,
-  "coverageDirectory": "coverage"
+  "coverageDirectory": "coverage",
+  "setupFilesAfterEnv": ["./jest.setup.redis-mock.js"]
 }
