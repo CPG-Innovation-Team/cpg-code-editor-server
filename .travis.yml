@@ -1,6 +1,9 @@
 language: node_js
 node_js:
 - 14
+script:
+- npm run lint
+- npm test
 deploy:
   provider: elasticbeanstalk
   access_key_id: AKIAYAXKG7IIGEUB3UUQ
