@@ -17,4 +17,4 @@ deploy:
     repo: casualbill/cpg-code-editor-server
   skip_cleanup: 'true'
 notifications:
-  webhooks: https://open.feishu.cn/officialapp/notify/e1f2424f191a2ebcb6240ca156b1da4e9e54591115a4ec454751debf01c7cb39
+  webhooks: https://open.feishu.cn/officialapp/notify/c4a1011904c5dc2efb332f1f80d817a88c8d829a2976d8c2c6f8bc4230c6e715
