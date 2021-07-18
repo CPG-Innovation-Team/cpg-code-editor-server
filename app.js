@@ -4,15 +4,9 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const { graphqlHTTP } = require('express-graphql');
-const { buildSchema } = require('graphql');
 
-const schema = buildSchema(`
-  type Query {
-    hello: String
-  }
-`);
-
-const root = { hello: () => 'Hello world!' };
+const schema = require('./api/schema');
+const resolver = require('./api/resolver');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -33,7 +27,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api', graphqlHTTP({
   schema,
-  rootValue: root,
+  rootValue: resolver,
   graphiql: true,
 }));
 
