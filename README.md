@@ -12,6 +12,9 @@
 ```
 .
 ├── README.md    项目说明文档
+├── api    接口目录
+│   ├── resolver.js    接口控制器文件
+│   └── schema.js    接口类型定义文件
 ├── app.js    全局文件
 ├── bin
 │   └── www    项目配置文件
@@ -31,4 +34,5 @@
 - [Express](http://expressjs.com/)
 - [Socket.IO](https://socket.io/)
 - [Redis](https://redis.io/)
+- [GraphQL](https://graphql.org/)
 - [PM2](https://pm2.keymetrics.io/)
