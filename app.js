@@ -3,6 +3,16 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const { graphqlHTTP } = require('express-graphql');
+const { buildSchema } = require('graphql');
+
+const schema = buildSchema(`
+  type Query {
+    hello: String
+  }
+`);
+
+const root = { hello: () => 'Hello world!' };
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -21,6 +31,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/api', graphqlHTTP({
+  schema,
+  rootValue: root,
+  graphiql: true,
+}));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
