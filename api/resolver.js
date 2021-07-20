@@ -1,5 +1,10 @@
+const { queryProjectList } = require('../mongodb');
+
 const resolver = {
-  hello: () => 'Hello world!',
+  projectList: async () => {
+    const result = await queryProjectList();
+    return result;
+  },
 };
 
 module.exports = resolver;
