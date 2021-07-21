@@ -12,12 +12,12 @@ const queryProjectById = async (projectId) => {
   return result;
 };
 
-const createProject = async (projectId, productName, syntax) => {
+const createProject = async (projectId, projectName, syntax) => {
   const projectCollection = db.collection('project');
   const createTime = Date.now();
   const result = await projectCollection.insertOne({
     id: projectId,
-    productName,
+    projectName,
     code: '',
     createTime,
     updateTime: createTime,
