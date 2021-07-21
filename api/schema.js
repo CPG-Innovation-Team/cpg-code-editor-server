@@ -7,6 +7,7 @@ const schema = buildSchema(`
 
   type Project {
     id: String
+    projectName: String
     code: String
     createTime: Float
     updateTime: Float
