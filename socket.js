@@ -1,18 +1,18 @@
 const stringRandom = require('string-random');
 const { Server } = require('socket.io');
-const { getCode, updateCode, roomExistQuery } = require('./redis');
+const { queryProjectById, updateProject } = require('./database/project');
 
 const socketExport = {};
 
-async function generateRoomId() {
-  const roomId = stringRandom(5);
-  const roomExist = await roomExistQuery(roomId);
+async function generateProjectId() {
+  const projectId = stringRandom(5);
+  const roomExist = await queryProjectById(projectId);
 
   return new Promise((resolve) => {
     if (roomExist) {
-      resolve(generateRoomId());
+      resolve(generateProjectId());
     } else {
-      resolve(roomId);
+      resolve(projectId);
     }
   });
 }
@@ -32,19 +32,19 @@ socketExport.getSocketIO = (server) => {
     });
 
     socket.on('clientUploadCode', async (socketRes) => {
-      let { roomId } = socketRes;
-      if (!roomId) {
-        roomId = await generateRoomId();
-        console.log(`Create new room: ${roomId}`);
+      let { projectId } = socketRes;
+      if (!projectId) {
+        projectId = await generateProjectId();
+        console.log(`Create new room: ${projectId}`);
       }
-      socket.join(roomId);
+      socket.join(projectId);
 
-      updateCode(roomId, socketRes.code)
+      updateProject(projectId, { code: socketRes.code })
         .then((redisRes) => {
-          console.log(`Redis update code: ${redisRes}`);
-          console.log(`Room: ${roomId} update code: ${socketRes.code}`);
-          io.to(roomId).emit('serverCodeSync', {
-            roomId,
+          console.log(`MongoDB update code: ${redisRes}`);
+          console.log(`Project: ${projectId} update code: ${socketRes.code}`);
+          io.to(projectId).emit('serverCodeSync', {
+            projectId,
             code: socketRes.code,
           });
         })
@@ -53,17 +53,17 @@ socketExport.getSocketIO = (server) => {
         });
     });
 
-    socket.on('clientEnterRoom', (roomId) => {
-      console.log(`Client join room: ${roomId} socketId: ${socket.id}`);
-      socket.join(roomId);
+    socket.on('clientEnterRoom', (projectId) => {
+      console.log(`Client join room: ${projectId} socketId: ${socket.id}`);
+      socket.join(projectId);
 
-      getCode(roomId)
-        .then((code) => {
-          console.log(`Redis get code: ${code}`);
-          io.to(roomId).emit('serverCodeSync', { roomId, code });
+      queryProjectById(projectId)
+        .then((projectInfo) => {
+          console.log(`MongoDB get code: ${projectInfo.code}`);
+          io.to(projectId).emit('serverCodeSync', { projectId, code: projectInfo.code });
         })
         .catch((err) => {
-          console.log(`Redis get code error: ${err}`);
+          console.log(`MongoDB get code error: ${err}`);
         });
     });
   });
