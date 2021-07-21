@@ -1,8 +1,8 @@
 const { queryProjectList } = require('../database/project');
 
 const resolver = {
-  projectList: async () => {
-    const result = await queryProjectList();
+  project: async ({ id }) => {
+    const result = await queryProjectList(id);
     return result;
   },
 };

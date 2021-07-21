@@ -2,7 +2,7 @@ const { buildSchema } = require('graphql');
 
 const schema = buildSchema(`
   type Query {
-    projectList: [Project]
+    project(id: String): [Project]
   }
 
   type Project {

@@ -1,14 +1,12 @@
 const db = require('./mongodb');
 
-const queryProjectList = async () => {
+const queryProjectList = async (projectId) => {
   const projectCollection = db.collection('project');
-  const result = await projectCollection.find({ available: true }).toArray();
-  return result;
-};
-
-const queryProjectById = async (projectId) => {
-  const projectCollection = db.collection('project');
-  const result = await projectCollection.find({ id: projectId }).toArray();
+  const queryParam = { available: true };
+  if (projectId) {
+    queryParam.id = projectId;
+  }
+  const result = await projectCollection.find(queryParam).toArray();
   return result;
 };
 
@@ -45,7 +43,6 @@ const removeProject = (projectId) => updateProject(projectId, { available: false
 
 module.exports = {
   queryProjectList,
-  queryProjectById,
   createProject,
   updateProject,
   removeProject,
