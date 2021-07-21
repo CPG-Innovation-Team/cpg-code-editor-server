@@ -1,4 +1,4 @@
-const { queryProjectList } = require('../mongodb');
+const { queryProjectList } = require('../database/project');
 
 const resolver = {
   projectList: async () => {
