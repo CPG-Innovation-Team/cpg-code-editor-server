@@ -2,7 +2,7 @@ const db = require('./mongodb');
 
 const queryProjectList = async () => {
   const projectCollection = db.collection('project');
-  const result = await projectCollection.find({}).toArray();
+  const result = await projectCollection.find({ available: true }).toArray();
   return result;
 };
 
