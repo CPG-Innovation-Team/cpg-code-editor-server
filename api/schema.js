@@ -5,6 +5,10 @@ const schema = buildSchema(`
     project(id: String): [Project]
   }
 
+  type Mutation {
+    createProject(projectId: String, projectName: String, syntax: String): Project
+  }
+
   type Project {
     id: String
     projectName: String
