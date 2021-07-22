@@ -9,7 +9,7 @@
   - 请求结构：
   ```
   query {
-    projectList(_id: 项目ID 可选) {
+    projectList(_id: 项目ID, hash: 项目Hash 均可选) {
       _id  项目ID String
       hash  项目对应Hash值，用于短链接 String
       projectName  项目名称 String

@@ -1,20 +1,25 @@
+const { ObjectId } = require('mongodb');
 const db = require('./mongodb');
 
-const queryProjectList = async (projectId) => {
-  const projectCollection = db.collection('project');
+const queryProjectList = async ({ _id, hash }) => {
+  const projectCollection = db.collection('project_info');
   const queryParam = { available: true };
-  if (projectId) {
-    queryParam.id = projectId;
+  if (_id) {
+    queryParam._id = ObjectId(_id);
   }
+  if (hash) {
+    queryParam.hash = hash;
+  }
+  console.log(queryParam);
   const result = await projectCollection.find(queryParam).toArray();
   return result;
 };
 
-const createProject = async (projectId, projectName, syntax) => {
-  const projectCollection = db.collection('project');
+const createProject = async (hash, projectName, syntax) => {
+  const projectCollection = db.collection('project_info');
   const createTime = Date.now();
   const result = await projectCollection.insertOne({
-    id: projectId,
+    hash,
     projectName,
     code: '',
     createTime,
@@ -27,10 +32,10 @@ const createProject = async (projectId, projectName, syntax) => {
 };
 
 const updateProject = async (projectId, data) => {
-  const projectCollection = db.collection('project');
+  const projectCollection = db.collection('project_info');
   const updateTime = Date.now();
   const result = await projectCollection.updateOne(
-    { id: projectId },
+    { _id: ObjectId(projectId) },
     {
       updateTime,
       ...data,

@@ -2,7 +2,7 @@ const { buildSchema } = require('graphql');
 
 const schema = buildSchema(`
   type Query {
-    project(id: String): [Project]
+    project(_id: String, hash: String): [Project]
   }
 
   type Mutation {
@@ -10,7 +10,8 @@ const schema = buildSchema(`
   }
 
   type Project {
-    id: String
+    _id: String
+    hash: String
     projectName: String
     code: String
     createTime: Float
