@@ -69,7 +69,7 @@
 
 5. 服务端项目内容同步至客户端
   - 方式：Socket.IO
-  - 事件：serverProejctInfoSync
+  - 事件：serverProjectInfoSync
   - 方向：服务端发起，客户端监听
   - 下载数据：
   ```
