@@ -1,12 +1,12 @@
-const { queryProjectList, createProject } = require('../database/project');
+const { queryProjectList, createProject } = require('../modules/project');
 
 const resolver = {
-  project: async ({ ...args }) => {
-    const result = await queryProjectList({ ...args });
+  project: async (args) => {
+    const result = await queryProjectList(args);
     return result;
   },
-  createProject: async ({ projectId, projectName, syntax }) => {
-    const result = await createProject(projectId, projectName, syntax);
+  createProject: async ({ projectName, syntax }) => {
+    const result = await createProject(projectName, syntax);
     return result;
   },
 };

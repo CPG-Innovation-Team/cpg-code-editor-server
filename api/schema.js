@@ -6,7 +6,7 @@ const schema = buildSchema(`
   }
 
   type Mutation {
-    createProject(projectId: String, projectName: String, syntax: String): Project
+    createProject(projectName: String, syntax: String): Project
   }
 
   type Project {
