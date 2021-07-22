@@ -64,5 +64,6 @@ const removeProject = (projectId) => updateProject(projectId, { available: false
 module.exports = {
   queryProjectList,
   createProject,
+  updateProject,
   removeProject,
 };

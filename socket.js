@@ -1,21 +1,7 @@
-const stringRandom = require('string-random');
 const { Server } = require('socket.io');
-const { queryProjectById, updateProject } = require('./database/project');
+const { queryProjectList, updateProject } = require('./modules/project');
 
 const socketExport = {};
-
-async function generateProjectId() {
-  const projectId = stringRandom(5);
-  const roomExist = await queryProjectById(projectId);
-
-  return new Promise((resolve) => {
-    if (roomExist) {
-      resolve(generateProjectId());
-    } else {
-      resolve(projectId);
-    }
-  });
-}
 
 socketExport.getSocketIO = (server) => {
   const io = new Server(server, {
@@ -32,16 +18,11 @@ socketExport.getSocketIO = (server) => {
     });
 
     socket.on('clientUploadCode', async (socketRes) => {
-      let { projectId } = socketRes;
-      if (!projectId) {
-        projectId = await generateProjectId();
-        console.log(`Create new room: ${projectId}`);
-      }
+      const { projectId } = socketRes;
       socket.join(projectId);
 
       updateProject(projectId, { code: socketRes.code })
-        .then((redisRes) => {
-          console.log(`MongoDB update code: ${redisRes}`);
+        .then(() => {
           console.log(`Project: ${projectId} update code: ${socketRes.code}`);
           io.to(projectId).emit('serverCodeSync', {
             projectId,
@@ -57,13 +38,9 @@ socketExport.getSocketIO = (server) => {
       console.log(`Client join room: ${projectId} socketId: ${socket.id}`);
       socket.join(projectId);
 
-      queryProjectById(projectId)
+      queryProjectList({ _id: projectId })
         .then((projectInfo) => {
-          console.log(`MongoDB get code: ${projectInfo.code}`);
           io.to(projectId).emit('serverCodeSync', { projectId, code: projectInfo.code });
-        })
-        .catch((err) => {
-          console.log(`MongoDB get code error: ${err}`);
         });
     });
   });
