@@ -6,17 +6,22 @@ const schema = buildSchema(`
   }
 
   type Mutation {
-    createProject(projectName: String, syntax: String): Project
+    createProject(projectName: String, syntax: String): InsertResult
   }
 
   type Project {
-    _id: String
+    _id: ID
     hash: String
     projectName: String
     code: String
     createTime: Float
     updateTime: Float
     syntax: String
+  }
+
+  type InsertResult {
+    success: Boolean
+    data: [Project]
   }
 `);
 

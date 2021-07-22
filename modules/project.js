@@ -30,7 +30,7 @@ const generateProjectHashCode = async () => {
 const createProject = async (projectName, syntax) => {
   const hash = await generateProjectHashCode();
   const createTime = Date.now();
-  const result = await dbInsertProject({
+  const insertResult = await dbInsertProject({
     hash,
     projectName,
     code: '',
@@ -39,7 +39,12 @@ const createProject = async (projectName, syntax) => {
     syntax,
     available: true,
   });
-  return result;
+
+  if (insertResult.acknowledged) {
+    const queryResult = await queryProjectList({ _id: insertResult.insertedId });
+    return { success: true, data: queryResult };
+  }
+  return { success: false };
 };
 
 const updateProject = async (projectId, data) => {

@@ -4,13 +4,13 @@
 2. 基于 [Socket.IO](https://socket.io/) 的 WebSocket 请求，用于实时数据更新
 
 ## 接口内容
-1. 查询项目列表
+1. 查询项目
   - 方式：GraphQL
   - 请求结构：
   ```
   query {
-    projectList(_id: 项目ID, hash: 项目Hash 均可选) {
-      _id  项目ID String
+    project(_id: 项目ID, hash: 项目Hash 均可选) {
+      _id  项目ID ID
       hash  项目对应Hash值，用于短链接 String
       projectName  项目名称 String
       code  代码 String
@@ -33,9 +33,8 @@
       syntax: 编程语言 String! 必填
       userId: 当前操作用户ID String! 必填
     ) {
-      id  项目ID String
-      hash  项目对应Hash值，用于短链接 String
-      createTime  创建时间 Float
+      success   操作是否成功 Boolean
+      data  新建的项目内容，内容同查询项目 [Project]
     }
   }
   ```
@@ -92,7 +91,8 @@
       userName: 用户名称 String! 必填
       avatar: 用户头像 String! 必填
     ) {
-      id: 返回用户ID String
+      success   操作是否成功 Boolean
+      userId  返回用户ID String
     }
   }
   ```
