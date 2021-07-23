@@ -49,14 +49,8 @@ const createProject = async (projectName, syntax) => {
 
 const updateProject = async (projectId, data) => {
   const updateTime = Date.now();
-  const result = await dbUpdateProject(
-    { _id: ObjectId(projectId) },
-    {
-      updateTime,
-      ...data,
-    },
-  );
-  return result;
+  const result = await dbUpdateProject({ _id: ObjectId(projectId) }, { updateTime, ...data });
+  return { success: result.acknowledged };
 };
 
 const removeProject = (projectId) => updateProject(projectId, { available: false });

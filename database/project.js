@@ -13,7 +13,7 @@ const dbInsertProject = async (param) => {
 };
 
 const dbUpdateProject = async (queryParam, data) => {
-  const result = await projectCollection.updateOne(queryParam, data);
+  const result = await projectCollection.updateOne(queryParam, { $set: data });
   return result;
 };
 
