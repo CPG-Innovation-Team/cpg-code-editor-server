@@ -46,7 +46,7 @@ const createProject = async (userId, projectName, syntax) => {
       projectId: insertProjectInfoResult.insertedId,
       relatedUser: [
         {
-          userId,
+          userId: ObjectId(userId),
           isOnline: true,
           isEditing: false,
         },
