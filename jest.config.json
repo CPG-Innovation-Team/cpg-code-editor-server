@@ -1,5 +1,11 @@
 {
   "collectCoverage": true,
   "coverageDirectory": "coverage",
+  "collectCoverageFrom": [
+    "**/*.js",
+    "!**/node_modules/**",
+    "!**/coverage/**",
+    "!**/routes/**"
+  ],
   "setupFilesAfterEnv": ["./jest.setup.redis-mock.js"]
 }
