@@ -97,7 +97,22 @@
   }
   ```
 
-7. 用户进入项目
+7. 更新用户信息
+  - 方式：GraphQL
+  - 请求结构：
+  ```
+  mutation {
+    updateUser(
+      id: 用户ID String! 必填
+      userName: 用户名称 String
+      avatar: 用户头像 String
+    ) {
+      success   操作是否成功 Boolean
+    }
+  }
+  ```
+
+8. 用户进入项目
   - 方式：Socket.IO
   - 事件：clientEnterProject
   - 方向：客户端发起，服务端监听
