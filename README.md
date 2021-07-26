@@ -47,3 +47,9 @@
 - [MongoDB](https://www.mongodb.com/)
 - [GraphQL](https://graphql.org/)
 - [PM2](https://pm2.keymetrics.io/)
+
+## 接口
+[后端接口文档](./docs/api.md)
+
+## 数据库设计
+[数据库设计文档](./docs/database.md)
