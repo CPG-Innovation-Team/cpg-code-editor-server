@@ -6,29 +6,31 @@ const schema = buildSchema(`
   }
 
   type Mutation {
-    createProject(projectName: String, syntax: String): handleProjectResult
-    removeProject(id: String): handleProjectResult
-    createUser(userName: String, avatar: String): handleUserResult
-    updateUser(id: String, userName: String, avatar: String): handleUserResult
+    createProject(userId: String!, projectName: String!, syntax: String!): handleProjectResult
+    removeProject(id: String!): handleProjectResult
+    createUser(userName: String!, avatar: String!): handleUserResult
+    updateUser(id: String!, userName: String, avatar: String): handleUserResult
   }
 
   type Project {
     _id: ID
-    hash: String
-    projectName: String
+    hash: String!
+    projectName: String!
     code: String
-    createTime: Float
+    createTime: Float!
     updateTime: Float
-    syntax: String
+    syntax: String!
+    createUser: String
+    lastModifiedUser: String
   }
 
   type handleProjectResult {
-    success: Boolean
+    success: Boolean!
     data: [Project]
   }
 
   type handleUserResult {
-    success: Boolean
+    success: Boolean!
     userId: ID
   }
 `);

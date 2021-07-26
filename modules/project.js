@@ -1,6 +1,7 @@
 const stringRandom = require('string-random');
 const { ObjectId } = require('mongodb');
-const { dbFindProject, dbInsertProject, dbUpdateProject } = require('../database/project');
+const { dbFindProjectInfo, dbInsertProjectInfo, dbUpdateProjectInfo } = require('../database/projectInfo');
+const { dbInsertProjectEdit } = require('../database/projectEdit');
 
 const queryProjectList = async ({ _id, hash }) => {
   const queryParam = { available: true };
@@ -10,7 +11,7 @@ const queryProjectList = async ({ _id, hash }) => {
   if (hash) {
     queryParam.hash = hash;
   }
-  const result = await dbFindProject(queryParam);
+  const result = await dbFindProjectInfo(queryParam);
   return result;
 };
 
@@ -27,10 +28,10 @@ const generateProjectHashCode = async () => {
   });
 };
 
-const createProject = async (projectName, syntax) => {
+const createProject = async (userId, projectName, syntax) => {
   const hash = await generateProjectHashCode();
   const createTime = Date.now();
-  const insertResult = await dbInsertProject({
+  const insertProjectInfoResult = await dbInsertProjectInfo({
     hash,
     projectName,
     code: '',
@@ -38,18 +39,32 @@ const createProject = async (projectName, syntax) => {
     updateTime: createTime,
     syntax,
     available: true,
+    createUser: userId,
   });
+  if (insertProjectInfoResult.acknowledged) {
+    const insertProjectEditResult = await dbInsertProjectEdit({
+      projectId: insertProjectInfoResult.insertedId,
+      relatedUser: [
+        {
+          userId,
+          isOnline: true,
+          isEditing: false,
+        },
+      ],
+    });
 
-  if (insertResult.acknowledged) {
-    const queryResult = await queryProjectList({ _id: insertResult.insertedId });
-    return { success: true, data: queryResult };
+    if (insertProjectEditResult.acknowledged) {
+      const queryResult = await queryProjectList({ _id: insertProjectInfoResult.insertedId });
+      return { success: true, data: queryResult };
+    }
+    return { success: false };
   }
   return { success: false };
 };
 
 const updateProject = async (projectId, data) => {
   const updateTime = Date.now();
-  const result = await dbUpdateProject({ _id: ObjectId(projectId) }, { updateTime, ...data });
+  const result = await dbUpdateProjectInfo({ _id: ObjectId(projectId) }, { updateTime, ...data });
   return { success: result.acknowledged };
 };
 

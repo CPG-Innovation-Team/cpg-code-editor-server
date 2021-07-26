@@ -6,8 +6,8 @@ const resolver = {
     const result = await queryProjectList(args);
     return result;
   },
-  createProject: async ({ projectName, syntax }) => {
-    const result = await createProject(projectName, syntax);
+  createProject: async ({ userId, projectName, syntax }) => {
+    const result = await createProject(userId, projectName, syntax);
     return result;
   },
   removeProject: async ({ id }) => {
