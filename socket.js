@@ -38,10 +38,9 @@ socketExport.getSocketIO = (server) => {
       console.log(`Client join room: ${projectId} socketId: ${socket.id}`);
       socket.join(projectId);
 
-      queryProjectList({ _id: projectId })
-        .then((projectInfo) => {
-          io.to(projectId).emit('serverCodeSync', { projectId, code: projectInfo.code });
-        });
+      queryProjectList({ _id: projectId }).then((projectInfo) => {
+        io.to(projectId).emit('serverCodeSync', { projectId, code: projectInfo.code });
+      });
     });
   });
 };

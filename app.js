@@ -27,16 +27,19 @@ app.use(
   cors({
     origin: true,
     credentials: true,
-  }),
+  })
 );
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/api', graphqlHTTP({
-  schema,
-  rootValue: resolver,
-  graphiql: true,
-}));
+app.use(
+  '/api',
+  graphqlHTTP({
+    schema,
+    rootValue: resolver,
+    graphiql: true,
+  })
+);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
