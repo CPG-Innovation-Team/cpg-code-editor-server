@@ -8,7 +8,8 @@ const schema = buildSchema(`
   type Mutation {
     createProject(projectName: String, syntax: String): handleProjectResult
     removeProject(id: String): handleProjectResult
-    createUser(userName: String, avatar: String): InsertUserResult
+    createUser(userName: String, avatar: String): handleUserResult
+    updateUser(id: String, userName: String, avatar: String): handleUserResult
   }
 
   type Project {
@@ -26,7 +27,7 @@ const schema = buildSchema(`
     data: [Project]
   }
 
-  type InsertUserResult {
+  type handleUserResult {
     success: Boolean
     userId: ID
   }

@@ -1,5 +1,5 @@
 const { queryProjectList, createProject, removeProject } = require('../modules/project');
-const { createUser } = require('../modules/user');
+const { createUser, updateUser } = require('../modules/user');
 
 const resolver = {
   project: async (args) => {
@@ -16,6 +16,10 @@ const resolver = {
   },
   createUser: async ({ userName, avatar }) => {
     const result = await createUser(userName, avatar);
+    return result;
+  },
+  updateUser: async ({ id, userName, avatar }) => {
+    const result = await updateUser(id, userName, avatar);
     return result;
   },
 };

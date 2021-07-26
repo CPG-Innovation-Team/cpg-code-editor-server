@@ -7,4 +7,9 @@ const dbInsertUser = async (param) => {
   return result;
 };
 
-module.exports = { dbInsertUser };
+const dbUpdateUser = async (queryParam, data) => {
+  const result = await userCollection.updateOne(queryParam, { $set: data });
+  return result;
+};
+
+module.exports = { dbInsertUser, dbUpdateUser };
