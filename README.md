@@ -18,8 +18,18 @@
 ├── app.js    全局文件
 ├── bin
 │   └── www    项目配置文件
+├── database    数据库操作目录
+│   ├── mongodb.js    MongoDB数据库配置及操作文件
+│   ├── project.js    项目数据库操作文件
+│   └── user.js    用户数据库操作文件
+├── docs    文档目录
+│   ├── api.js    接口文档
+│   └── database.js    数据库结构文档
 ├── jest.config.json    Jest单元测试配置文件
 ├── jest.setup.redis-mock.js
+├── modules    逻辑模块目录
+│   ├── project.js    项目逻辑文件
+│   └── user.js    用户逻辑文件
 ├── package-lock.json    项目依赖版本配置文件
 ├── package.json    项目配置文件
 ├── public    同构网站前端内容（为控制台预留）
