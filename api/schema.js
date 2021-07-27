@@ -22,10 +22,10 @@ const schema = buildSchema(`
     syntax: String!
     createUser: String
     lastModifiedUser: String
-    relatedUser: [User]
+    editInfo: [ProjectEditInfo]
   }
 
-  type User {
+  type ProjectEditInfo {
     userId: ID
     isOnline: Boolean
     isEditing: Boolean

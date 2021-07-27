@@ -22,7 +22,7 @@
       syntax  编程语言 String
       createUser  创建用户ID String
       lastModifiedUser  最后编辑用户ID String
-      relatedUser {
+      editInfo {
         userId  用户ID ID
         isOnline  是否在线 Boolean
         isEditing  是否正在编辑 Boolean

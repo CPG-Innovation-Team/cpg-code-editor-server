@@ -48,13 +48,9 @@ const createProject = async (userId, projectName, syntax) => {
   if (insertProjectInfoResult.acknowledged) {
     const insertProjectEditResult = await dbInsertProjectEdit({
       projectId: insertProjectInfoResult.insertedId,
-      relatedUser: [
-        {
-          userId: ObjectId(userId),
-          isOnline: true,
-          isEditing: false,
-        },
-      ],
+      userId: ObjectId(userId),
+      isOnline: true,
+      isEditing: false,
     });
 
     if (insertProjectEditResult.acknowledged) {

@@ -40,12 +40,8 @@
   ```
   {
     projectId  项目ID ObjectId
-    relatedUser [
-      {
-        userId  用户ID ObjectId
-        isOnline  是否在线 Boolean
-        isEditing  是否正在编辑 Boolean
-      }
-    ]
+    userId  用户ID ObjectId
+    isOnline  是否在线 Boolean
+    isEditing  是否正在编辑 Boolean
   }
   ```

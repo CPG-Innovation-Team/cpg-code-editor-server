@@ -12,13 +12,9 @@ const dbFindProjectInfo = async (param) => {
           from: 'project_edit_info',
           localField: '_id',
           foreignField: 'projectId',
-          as: 'projectEditInfo',
+          as: 'editInfo',
         },
       },
-      {
-        $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ['$projectEditInfo', 0] }, '$$ROOT'] } },
-      },
-      { $project: { projectEditInfo: 0 } },
     ])
     .toArray();
   return result;
