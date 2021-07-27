@@ -17,17 +17,13 @@ socketExport.getSocketIO = (server) => {
       console.log(`User disconnected, socketId: ${socket.id}`);
     });
 
-    socket.on('clientUploadCode', async (socketRes) => {
-      const { projectId } = socketRes;
+    socket.on('clientUpdateProjectInfo', async (socketRes) => {
+      const { projectId, projectName, code, syntax, userId } = socketRes;
       socket.join(projectId);
 
-      updateProject(projectId, { code: socketRes.code })
+      updateProject(projectId, { projectName, code, syntax, userId })
         .then(() => {
-          console.log(`Project: ${projectId} update code: ${socketRes.code}`);
-          io.to(projectId).emit('serverCodeSync', {
-            projectId,
-            code: socketRes.code,
-          });
+          io.to(projectId).emit('serverProjectInfoSync', { projectId, projectName, code, syntax });
         })
         .catch((err) => {
           console.log(`Update code error: ${err}`);
