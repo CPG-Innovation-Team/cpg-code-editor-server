@@ -1,6 +1,6 @@
 const stringRandom = require('string-random');
 const { ObjectId } = require('mongodb');
-const { dbFindProjectInfo, dbInsertProjectInfo, dbUpdateProjectInfo } = require('../database/projectInfo');
+const { dbFindProjectInfo, dbInsertProjectInfo, dbUpdateProjectInfo } = require('../database/project');
 const { dbInsertProjectEdit } = require('../database/projectEdit');
 
 const queryProjectList = async ({ _id, hash }) => {

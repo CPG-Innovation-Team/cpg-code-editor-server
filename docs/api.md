@@ -9,7 +9,10 @@
   - 请求结构：
   ```
   query {
-    project(_id: 项目ID, hash: 项目Hash 均可选) {
+    project(
+      _id: 项目ID String,
+      hash: 项目Hash String
+    ) {
       _id  项目ID ID
       hash  项目对应Hash值，用于短链接 String
       projectName  项目名称 String
@@ -19,7 +22,11 @@
       syntax  编程语言 String
       createUser  创建用户ID String
       lastModifiedUser  最后编辑用户ID String
-      
+      relatedUser {
+        userId  用户ID ID
+        isOnline  是否在线 Boolean
+        isEditing  是否正在编辑 Boolean
+      }
     }
   }
   ```

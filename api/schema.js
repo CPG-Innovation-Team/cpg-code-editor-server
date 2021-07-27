@@ -13,7 +13,7 @@ const schema = buildSchema(`
   }
 
   type Project {
-    _id: ID
+    _id: ID!
     hash: String!
     projectName: String!
     code: String
@@ -22,6 +22,13 @@ const schema = buildSchema(`
     syntax: String!
     createUser: String
     lastModifiedUser: String
+    relatedUser: [User]
+  }
+
+  type User {
+    userId: ID
+    isOnline: Boolean
+    isEditing: Boolean
   }
 
   type handleProjectResult {
