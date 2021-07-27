@@ -4,6 +4,7 @@ const {
   dbFindProjectInfo,
   dbInsertProjectInfo,
   dbUpdateProjectInfo,
+  dbFindProjectEdit,
   dbInsertProjectEdit,
   dbUpdateProjectEdit,
 } = require('../database/project');
@@ -72,8 +73,16 @@ const updateProject = async (projectId, data) => {
 const removeProject = (projectId) => updateProject(projectId, { available: false });
 
 const modifyProjectEditStatus = async (projectId, userId, data) => {
-  const result = await dbUpdateProjectEdit({ projectId: ObjectId(projectId), userId: ObjectId(userId) }, { ...data });
-  return { success: result.acknowledged };
+  const queryResult = await dbFindProjectEdit({ projectId, userId });
+  if (queryResult && queryResult.length > 0) {
+    const updateResult = await dbUpdateProjectEdit(
+      { projectId: ObjectId(projectId), userId: ObjectId(userId) },
+      { ...data }
+    );
+    return { success: updateResult.acknowledged };
+  }
+  const insertResult = await dbInsertProjectEdit({ projectId, userId, ...data });
+  return { soccess: insertResult.acknowledged };
 };
 
 module.exports = {

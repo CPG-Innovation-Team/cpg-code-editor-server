@@ -30,6 +30,11 @@ const dbUpdateProjectInfo = async (queryParam, data) => {
   return result;
 };
 
+const dbFindProjectEdit = async (param) => {
+  const result = await projectEditCollection.find(param);
+  return result;
+};
+
 const dbInsertProjectEdit = async (param) => {
   const result = await projectEditCollection.insertOne({ ...param });
   return result;
@@ -44,6 +49,7 @@ module.exports = {
   dbFindProjectInfo,
   dbInsertProjectInfo,
   dbUpdateProjectInfo,
+  dbFindProjectEdit,
   dbInsertProjectEdit,
   dbUpdateProjectEdit,
 };
