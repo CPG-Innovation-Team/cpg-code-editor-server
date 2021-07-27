@@ -5,6 +5,7 @@ const {
   dbInsertProjectInfo,
   dbUpdateProjectInfo,
   dbInsertProjectEdit,
+  dbUpdateProjectEdit,
 } = require('../database/project');
 
 const queryProjectList = async ({ _id, hash }) => {
@@ -70,9 +71,15 @@ const updateProject = async (projectId, data) => {
 
 const removeProject = (projectId) => updateProject(projectId, { available: false });
 
+const modifyProjectEditStatus = async (projectId, userId, data) => {
+  const result = await dbUpdateProjectEdit({ projectId: ObjectId(projectId), userId: ObjectId(userId) }, { ...data });
+  return { success: result.acknowledged };
+};
+
 module.exports = {
   queryProjectList,
   createProject,
   updateProject,
   removeProject,
+  modifyProjectEditStatus,
 };

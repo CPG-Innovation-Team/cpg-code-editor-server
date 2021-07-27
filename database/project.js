@@ -35,9 +35,15 @@ const dbInsertProjectEdit = async (param) => {
   return result;
 };
 
+const dbUpdateProjectEdit = async (queryParam, data) => {
+  const result = await projectEditCollection.updateOne(queryParam, { $set: data });
+  return result;
+};
+
 module.exports = {
   dbFindProjectInfo,
   dbInsertProjectInfo,
   dbUpdateProjectInfo,
   dbInsertProjectEdit,
+  dbUpdateProjectEdit,
 };

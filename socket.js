@@ -1,5 +1,5 @@
 const { Server } = require('socket.io');
-const { queryProjectList, updateProject } = require('./modules/project');
+const { queryProjectList, updateProject, modifyProjectEditStatus } = require('./modules/project');
 
 const socketExport = {};
 
@@ -30,12 +30,12 @@ socketExport.getSocketIO = (server) => {
         });
     });
 
-    socket.on('clientEnterRoom', (projectId) => {
-      console.log(`Client join room: ${projectId} socketId: ${socket.id}`);
+    socket.on('clientEnterProject', (projectId, userId) => {
       socket.join(projectId);
 
+      modifyProjectEditStatus(projectId, userId, { isOnline: true });
       queryProjectList({ _id: projectId }).then((projectInfo) => {
-        io.to(projectId).emit('serverCodeSync', { projectId, code: projectInfo.code });
+        io.to(projectId).emit('serverProjectInfoSync', { projectId, code: projectInfo.code });
       });
     });
   });
