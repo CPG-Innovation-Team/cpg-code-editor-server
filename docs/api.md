@@ -103,7 +103,7 @@
       userName: 用户名称 String! 必填
       avatar: 用户头像 String! 必填
     ) {
-      success   操作是否成功 Boolean
+      success  操作是否成功 Boolean
       userId  返回用户ID String
     }
   }
@@ -119,7 +119,7 @@
       userName: 用户名称 String
       avatar: 用户头像 String
     ) {
-      success   操作是否成功 Boolean
+      success  操作是否成功 Boolean
     }
   }
   ```
