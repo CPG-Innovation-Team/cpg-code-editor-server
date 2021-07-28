@@ -24,6 +24,8 @@
       lastModifiedUser  最后编辑用户ID String
       editInfo {
         userId  用户ID ID
+        userName  用户名 String
+        avatar  用户头像 String
         isOnline  是否在线 Boolean
         isEditing  是否正在编辑 Boolean
       }

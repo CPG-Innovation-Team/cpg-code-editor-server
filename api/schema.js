@@ -27,6 +27,8 @@ const schema = buildSchema(`
 
   type ProjectEditInfo {
     userId: ID
+    userName: String
+    avatar: String
     isOnline: Boolean
     isEditing: Boolean
   }

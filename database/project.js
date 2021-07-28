@@ -31,7 +31,25 @@ const dbUpdateProjectInfo = async (queryParam, data) => {
 };
 
 const dbFindProjectEdit = async (param) => {
-  const result = await projectEditCollection.find(param);
+  const result = await projectEditCollection
+    .aggregate([
+      { $match: param },
+      {
+        $lookup: {
+          from: 'user_info',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'userInfo',
+        },
+      },
+      {
+        $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ['$userInfo', 0] }, '$$ROOT'] } },
+      },
+      {
+        $project: { userInfo: 0 },
+      },
+    ])
+    .toArray();
   return result;
 };
 
