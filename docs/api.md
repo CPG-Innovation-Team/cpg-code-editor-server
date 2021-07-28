@@ -85,6 +85,11 @@
     projectName: 项目名称 String
     code: 代码 String
     syntax: 编程语言 String
+    editUser: {
+      userId: 用户ID String
+      isOnline: 是否在线 Boolean
+      isEditing: 是否正在编辑 Boolean
+    }
   }
  
   ```

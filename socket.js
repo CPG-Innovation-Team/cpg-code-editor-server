@@ -35,7 +35,14 @@ socketExport.getSocketIO = (server) => {
 
       modifyProjectEditStatus(projectId, userId, { isOnline: true });
       queryProjectList({ _id: projectId }).then((projectInfo) => {
-        io.to(projectId).emit('serverProjectInfoSync', { projectId, code: projectInfo.code });
+        io.to(projectId).emit('serverProjectInfoSync', {
+          projectId,
+          code: projectInfo.code,
+          editUser: {
+            userId,
+            isOnline: true,
+          },
+        });
       });
     });
   });
