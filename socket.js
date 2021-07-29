@@ -37,7 +37,7 @@ socketExport.getSocketIO = (server) => {
       queryProjectList({ _id: projectId }).then((projectInfo) => {
         io.to(projectId).emit('serverProjectInfoSync', {
           projectId,
-          code: projectInfo.code,
+          code: projectInfo[0].code,
           editUser: {
             userId,
             isOnline: true,
