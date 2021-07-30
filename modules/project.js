@@ -19,7 +19,7 @@ const queryProjectList = async ({ _id, hash }) => {
   }
   const result = await dbFindProjectInfo(queryParam);
 
-  if (queryParam._id || queryParam.hash) {
+  if (result.length > 0 && (queryParam._id || queryParam.hash)) {
     result[0].editInfo = await dbFindProjectEdit({ projectId: result[0]._id });
   }
   return result;
