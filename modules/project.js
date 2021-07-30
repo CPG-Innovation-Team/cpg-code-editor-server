@@ -77,7 +77,7 @@ const updateProject = async (projectId, data) => {
 const removeProject = (projectId) => updateProject(projectId, { available: false });
 
 const modifyProjectEditStatus = async (projectId, userId, data) => {
-  const queryResult = await dbFindProjectEdit({ projectId, userId });
+  const queryResult = await dbFindProjectEdit({ projectId: ObjectId(projectId), userId: ObjectId(userId) });
   if (queryResult && queryResult.length > 0) {
     const updateResult = await dbUpdateProjectEdit(
       { projectId: ObjectId(projectId), userId: ObjectId(userId) },
