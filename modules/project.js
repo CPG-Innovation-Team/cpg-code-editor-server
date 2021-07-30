@@ -85,7 +85,11 @@ const modifyProjectEditStatus = async (projectId, userId, data) => {
     );
     return { success: updateResult.acknowledged };
   }
-  const insertResult = await dbInsertProjectEdit({ projectId, userId, ...data });
+  const insertResult = await dbInsertProjectEdit({
+    projectId: ObjectId(projectId),
+    userId: ObjectId(userId),
+    ...data,
+  });
   return { soccess: insertResult.acknowledged };
 };
 
