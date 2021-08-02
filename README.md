@@ -3,6 +3,8 @@
 ## 系统依赖
 ### 需要安装 [Node.js](https://nodejs.org)
 ### 在版本 Node.js 14.17 上稳定运行
+### 需要安装 [MongoDB](https://www.mongodb.com/)
+### 建议安装 MongoDB Community 4.4 版本 [官方下载](https://www.mongodb.com/try/download/community)
 
 ## 操作命令
 ### 首次运行或有依赖变更时执行安装 `npm install`
