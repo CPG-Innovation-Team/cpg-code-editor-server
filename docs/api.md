@@ -22,6 +22,7 @@
       syntax  编程语言 String
       createUser  创建用户ID String
       lastModifiedUser  最后编辑用户ID String
+      isTop  是否置顶 Boolean
       editInfo {
         userId  用户ID ID
         userName  用户名 String
@@ -138,3 +139,17 @@
   }
   ```
 
+9. 更新项目是否置顶
+  - 方式：GraphQL
+  - 请求结构：
+  ```
+  mutation {
+    updateProject (
+      id: 项目ID String! 必填
+      isTop: 是否置顶 Boolean
+    ) {
+      result: 操作结果 Boolean
+    }
+  }
+  ```
+  

@@ -50,6 +50,7 @@ const createProject = async (userId, projectName, syntax) => {
     syntax,
     available: true,
     createUser: userId,
+    isTop: false,
   });
   if (insertProjectInfoResult.acknowledged) {
     const insertProjectEditResult = await dbInsertProjectEdit({

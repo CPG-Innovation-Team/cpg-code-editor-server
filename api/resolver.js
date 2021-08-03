@@ -1,4 +1,4 @@
-const { queryProjectList, createProject, removeProject } = require('../modules/project');
+const { queryProjectList, createProject, updateProject, removeProject } = require('../modules/project');
 const { createUser, updateUser } = require('../modules/user');
 
 const resolver = {
@@ -8,6 +8,10 @@ const resolver = {
   },
   createProject: async ({ userId, projectName, syntax }) => {
     const result = await createProject(userId, projectName, syntax);
+    return result;
+  },
+  updateProject: async ({ id, isTop }) => {
+    const result = await updateProject(id, { isTop });
     return result;
   },
   removeProject: async ({ id }) => {
