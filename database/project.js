@@ -70,4 +70,6 @@ module.exports = {
   dbFindProjectEdit,
   dbInsertProjectEdit,
   dbUpdateProjectEdit,
+  projectInfoCollection,
+  projectEditCollection,
 };
