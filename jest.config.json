@@ -7,6 +7,5 @@
     "!**/coverage/**",
     "!**/routes/**"
   ],
-  "setupFilesAfterEnv": ["./jest.setup.redis-mock.js"],
   "preset": "@shelf/jest-mongodb"
 }

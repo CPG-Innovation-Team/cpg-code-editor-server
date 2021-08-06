@@ -31,15 +31,12 @@
 ├── docs    文档目录
 │   ├── api.js    接口文档
 │   └── database.js    数据库结构文档
-├── jest.config.json    Jest单元测试配置文件
-├── jest.setup.redis-mock.js
 ├── modules    逻辑模块目录
 │   ├── project.js    项目逻辑文件
 │   └── user.js    用户逻辑文件
 ├── package-lock.json    项目依赖版本配置文件
 ├── package.json    项目配置文件
 ├── public    同构网站前端内容（为控制台预留）
-├── redis.js    Redis数据库文件
 ├── routes    路由目录（为控制台预留）
 ├── socket.js    Socket.IO实时数据同步文件
 ├── tests    单元测试目录
@@ -49,7 +46,6 @@
 ## 主要框架、组件及技术
 - [Express](http://expressjs.com/)
 - [Socket.IO](https://socket.io/)
-- [Redis](https://redis.io/)
 - [MongoDB](https://www.mongodb.com/)
 - [GraphQL](https://graphql.org/)
 - [PM2](https://pm2.keymetrics.io/)
