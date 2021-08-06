@@ -12,4 +12,4 @@ const dbUpdateUser = async (queryParam, data) => {
   return result;
 };
 
-module.exports = { dbInsertUser, dbUpdateUser };
+module.exports = { dbInsertUser, dbUpdateUser, userCollection };
