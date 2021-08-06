@@ -1,4 +1,4 @@
-const db = require('./mongodb');
+const { db } = require('./mongodb');
 
 const projectInfoCollection = db.collection('project_info');
 const projectEditCollection = db.collection('project_edit_info');

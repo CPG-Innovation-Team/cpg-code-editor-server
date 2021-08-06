@@ -1,4 +1,4 @@
-const db = require('./mongodb');
+const { db } = require('./mongodb');
 
 const userCollection = db.collection('user_info');
 
