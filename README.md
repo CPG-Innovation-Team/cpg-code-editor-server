@@ -31,6 +31,8 @@
 ├── docs    文档目录
 │   ├── api.js    接口文档
 │   └── database.js    数据库结构文档
+├── jest-mongodb-config.js    Jest MongoDB数据库单元测试配置文件
+├── jest.config.json    Jest单元测试配置文件
 ├── modules    逻辑模块目录
 │   ├── project.js    项目逻辑文件
 │   └── user.js    用户逻辑文件
