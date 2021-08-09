@@ -5,7 +5,9 @@
     "**/*.js",
     "!**/node_modules/**",
     "!**/coverage/**",
-    "!**/routes/**"
+    "!**/routes/**",
+    "!**/api/**",
+    "!app.js"
   ],
   "preset": "@shelf/jest-mongodb"
 }
