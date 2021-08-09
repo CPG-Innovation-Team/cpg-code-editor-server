@@ -4,8 +4,13 @@ const {
   dbFindProjectInfo,
   dbInsertProjectInfo,
   dbUpdateProjectInfo,
+  dbFindProjectEdit,
+  dbInsertProjectEdit,
+  dbUpdateProjectEdit,
   projectInfoCollection,
+  projectEditCollection,
 } = require('../database/project');
+const { userCollection } = require('../database/user');
 
 describe('Project database operation', () => {
   afterAll(async () => {
@@ -14,6 +19,8 @@ describe('Project database operation', () => {
 
   beforeEach(async () => {
     await projectInfoCollection.deleteMany({});
+    await projectEditCollection.deleteMany({});
+    await userCollection.deleteMany({});
   });
 
   it('Insert a project into collection then find it', async () => {
@@ -47,5 +54,39 @@ describe('Project database operation', () => {
     const findResult = await dbFindProjectInfo({ _id: insertResult.insertedId });
 
     expect(findResult).toEqual([{ _id: insertResult.insertedId, editInfo: [], ...mockParam, syntax: 'go' }]);
+  });
+
+  it('Insert a project edit info with user info into collection then query the same project with user info', async () => {
+    const mockUserParam = { userName: 'Grace', avatar: 'img-001.jpg' };
+    const insertUserResult = await userCollection.insertOne(mockUserParam);
+
+    const mockProjectEditParam = { projectId: 'project001', userId: insertUserResult.insertedId };
+    await dbInsertProjectEdit(mockProjectEditParam);
+    const findResult = await dbFindProjectEdit(mockProjectEditParam);
+
+    expect(findResult).toMatchObject([{ ...mockProjectEditParam, ...mockUserParam }]);
+  });
+
+  it('Insert a project edit info with user info into collection then query the same project with user info', async () => {
+    const mockUserParam = { userName: 'Grace', avatar: 'img-001.jpg', isOnline: true };
+    const insertUserResult = await userCollection.insertOne(mockUserParam);
+
+    const mockProjectEditParam = { projectId: 'project001', userId: insertUserResult.insertedId };
+    await dbInsertProjectEdit(mockProjectEditParam);
+    const findResult = await dbFindProjectEdit(mockProjectEditParam);
+
+    expect(findResult).toMatchObject([{ ...mockProjectEditParam, ...mockUserParam }]);
+  });
+
+  it('Insert a project edit info with user info into collection and update online status then query the updated record', async () => {
+    const mockUserParam = { userName: 'Grace', avatar: 'img-001.jpg', isOnline: true };
+    const insertUserResult = await userCollection.insertOne(mockUserParam);
+
+    const mockProjectEditParam = { projectId: 'project001', userId: insertUserResult.insertedId };
+    await dbInsertProjectEdit(mockProjectEditParam);
+    await dbUpdateProjectEdit(mockProjectEditParam, { isOnline: false });
+    const findResult = await dbFindProjectEdit(mockProjectEditParam);
+
+    expect(findResult).toMatchObject([{ ...mockProjectEditParam, ...mockUserParam, isOnline: false }]);
   });
 });
