@@ -2,7 +2,7 @@ const { dbClose } = require('../database/mongodb');
 const { userCollection } = require('../database/user');
 const { createUser, updateUser } = require('../modules/user');
 
-describe('User module operation', () => {
+describe('User module', () => {
   afterAll(async () => {
     await dbClose();
   });
