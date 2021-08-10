@@ -15,6 +15,7 @@ const dbFindProjectInfo = async (param) => {
           as: 'editInfo',
         },
       },
+      { $sort: { isTop: -1, updateTime: -1 } },
     ])
     .toArray();
   return result;

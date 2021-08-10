@@ -53,12 +53,16 @@ describe('Project module', () => {
     expect(queryResult[0].createTime).toEqual(queryResult[0].updateTime);
   });
 
-  it('Create 3 projects then get the correct query result', async () => {
+  it('Create 5 projects and top the second project then get the correct query result with correct sequency', async () => {
     const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
 
     const createProjectResult1 = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
     const createProjectResult2 = await createProject(insertUserResult.insertedId, 'Project2', 'javascript');
     const createProjectResult3 = await createProject(insertUserResult.insertedId, 'Project3', 'javascript');
+    const createProjectResult4 = await createProject(insertUserResult.insertedId, 'Project4', 'javascript');
+    const createProjectResult5 = await createProject(insertUserResult.insertedId, 'Project5', 'javascript');
+
+    await updateProject(createProjectResult2.data[0]._id, { isTop: true });
 
     const findResult = await queryProjectList({});
 
@@ -71,9 +75,11 @@ describe('Project module', () => {
     };
 
     expect(findResult).toMatchObject([
-      { _id: createProjectResult1.data[0]._id, projectName: 'Project1', ...expectedProjectData },
-      { _id: createProjectResult2.data[0]._id, projectName: 'Project2', ...expectedProjectData },
+      { _id: createProjectResult2.data[0]._id, projectName: 'Project2', ...expectedProjectData, isTop: true },
+      { _id: createProjectResult5.data[0]._id, projectName: 'Project5', ...expectedProjectData },
+      { _id: createProjectResult4.data[0]._id, projectName: 'Project4', ...expectedProjectData },
       { _id: createProjectResult3.data[0]._id, projectName: 'Project3', ...expectedProjectData },
+      { _id: createProjectResult1.data[0]._id, projectName: 'Project1', ...expectedProjectData },
     ]);
   });
 
