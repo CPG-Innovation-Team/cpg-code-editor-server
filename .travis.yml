@@ -4,6 +4,7 @@ node_js:
 script:
 - npm run lint
 - npm test
+- sonar-scanner
 deploy:
   provider: elasticbeanstalk
   access_key_id: AKIAYAXKG7IIGEUB3UUQ
@@ -18,3 +19,8 @@ deploy:
   skip_cleanup: 'true'
 notifications:
   webhooks: https://open.feishu.cn/officialapp/notify/c4a1011904c5dc2efb332f1f80d817a88c8d829a2976d8c2c6f8bc4230c6e715
+addons:
+  sonarcloud:
+    organization: "cpg-innovation-team"
+    token:
+      secure: SONAR_TOKEN
