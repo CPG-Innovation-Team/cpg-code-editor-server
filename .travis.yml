@@ -23,4 +23,4 @@ addons:
   sonarcloud:
     organization: "cpg-innovation-team"
     token:
-      secure: SONAR_TOKEN
+      secure: ${SONAR_TOKEN}
