@@ -1,6 +1,12 @@
 const { dbClose } = require('../database/mongodb');
 
-const { queryProjectList, createProject, updateProject, removeProject } = require('../modules/project');
+const {
+  queryProjectList,
+  createProject,
+  updateProject,
+  removeProject,
+  modifyProjectEditStatus,
+} = require('../modules/project');
 const { projectInfoCollection, projectEditCollection } = require('../database/project');
 const { userCollection } = require('../database/user');
 
@@ -132,5 +138,75 @@ describe('Project module', () => {
     expect(dbFindResult[0]).toHaveProperty('hash');
     expect(dbFindResult[0]).toHaveProperty('createTime');
     expect(dbFindResult[0]).toHaveProperty('updateTime');
+  });
+
+  it('Create a project and modify edit status then get the correct query result', async () => {
+    const insertUserResult1 = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
+    const insertUserResult2 = await userCollection.insertOne({ userName: 'Tony', avatar: 'img-002.jpg' });
+
+    const createProjectResult = await createProject(insertUserResult1.insertedId, 'Project1', 'javascript');
+    const createdProjectId = createProjectResult.data[0]._id;
+
+    await modifyProjectEditStatus(createdProjectId, insertUserResult2.insertedId, { isOnline: true, isEditing: false });
+    const queryResult1 = await queryProjectList({ _id: createdProjectId });
+
+    expect(queryResult1).toMatchObject([
+      {
+        _id: createdProjectId,
+        projectName: 'Project1',
+        code: '',
+        syntax: 'javascript',
+        available: true,
+        createUser: insertUserResult1.insertedId,
+        isTop: false,
+        editInfo: [
+          {
+            userId: insertUserResult1.insertedId,
+            userName: 'Grace',
+            avatar: 'img-001.jpg',
+            isEditing: false,
+            isOnline: true,
+          },
+          {
+            userId: insertUserResult2.insertedId,
+            userName: 'Tony',
+            avatar: 'img-002.jpg',
+            isEditing: false,
+            isOnline: true,
+          },
+        ],
+      },
+    ]);
+
+    await modifyProjectEditStatus(createdProjectId, insertUserResult2.insertedId, { isOnline: true, isEditing: true });
+    const queryResult2 = await queryProjectList({ _id: createdProjectId });
+
+    expect(queryResult2).toMatchObject([
+      {
+        _id: createdProjectId,
+        projectName: 'Project1',
+        code: '',
+        syntax: 'javascript',
+        available: true,
+        createUser: insertUserResult1.insertedId,
+        isTop: false,
+        editInfo: [
+          {
+            userId: insertUserResult1.insertedId,
+            userName: 'Grace',
+            avatar: 'img-001.jpg',
+            isEditing: false,
+            isOnline: true,
+          },
+          {
+            userId: insertUserResult2.insertedId,
+            userName: 'Tony',
+            avatar: 'img-002.jpg',
+            isEditing: true,
+            isOnline: true,
+          },
+        ],
+      },
+    ]);
   });
 });
