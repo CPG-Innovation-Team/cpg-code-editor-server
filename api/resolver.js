@@ -2,30 +2,12 @@ const { queryProjectList, createProject, updateProject, removeProject } = requir
 const { createUser, updateUser } = require('../modules/user');
 
 const resolver = {
-  project: async (args) => {
-    const result = await queryProjectList(args);
-    return result;
-  },
-  createProject: async ({ userId, projectName, syntax }) => {
-    const result = await createProject(userId, projectName, syntax);
-    return result;
-  },
-  updateProject: async ({ id, isTop }) => {
-    const result = await updateProject(id, { isTop });
-    return result;
-  },
-  removeProject: async ({ id }) => {
-    const result = await removeProject(id);
-    return result;
-  },
-  createUser: async ({ userName, avatar }) => {
-    const result = await createUser(userName, avatar);
-    return result;
-  },
-  updateUser: async ({ id, userName, avatar }) => {
-    const result = await updateUser(id, userName, avatar);
-    return result;
-  },
+  project: async (args) => queryProjectList(args),
+  createProject: async ({ userId, projectName, syntax }) => createProject(userId, projectName, syntax),
+  updateProject: async ({ id, isTop }) => updateProject(id, { isTop }),
+  removeProject: async ({ id }) => removeProject(id),
+  createUser: async ({ userName, avatar }) => createUser(userName, avatar),
+  updateUser: async ({ id, userName, avatar }) => updateUser(id, userName, avatar),
 };
 
 module.exports = resolver;
