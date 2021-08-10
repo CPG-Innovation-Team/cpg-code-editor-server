@@ -15,7 +15,7 @@ deploy:
   env: Cpgcodeeditorserver-env
   bucket_name: elasticbeanstalk-cn-north-1-551320746512
   on:
-    repo: casualbill/cpg-code-editor-server
+    repo: cpg-innovation-team/cpg-code-editor-server
   skip_cleanup: 'true'
 notifications:
   webhooks: https://open.feishu.cn/officialapp/notify/c4a1011904c5dc2efb332f1f80d817a88c8d829a2976d8c2c6f8bc4230c6e715
