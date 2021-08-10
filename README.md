@@ -1,4 +1,6 @@
 # 在线代码编辑器后端项目
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=CPG-Innovation-Team_cpg-code-editor-server&metric=alert_status)](https://sonarcloud.io/dashboard?id=CPG-Innovation-Team_cpg-code-editor-server)
+[![Build Status](https://www.travis-ci.com/CPG-Innovation-Team/cpg-code-editor-server.svg?branch=master)](https://www.travis-ci.com/CPG-Innovation-Team/cpg-code-editor-server)
 
 ## 系统依赖
 ### 需要安装 [Node.js](https://nodejs.org)
