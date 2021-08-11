@@ -58,6 +58,7 @@ const createProject = async (userId, projectName, syntax) => {
       userId: ObjectId(userId),
       isOnline: true,
       isEditing: false,
+      currectCursor: null,
     });
 
     if (insertProjectEditResult.acknowledged) {

@@ -18,16 +18,19 @@ socketExport.getSocketIO = (server) => {
     });
 
     socket.on('clientUpdateProjectInfo', async (socketRes) => {
-      const { projectId, projectName, code, syntax, userId } = socketRes;
+      const { projectId, projectName, code, syntax, userId, isOnline, isEditing, currectCursor } = socketRes;
       socket.join(projectId);
 
-      updateProject(projectId, { projectName, code, syntax, userId })
-        .then(() => {
-          io.to(projectId).emit('serverProjectInfoSync', { projectId, projectName, code, syntax });
-        })
-        .catch((err) => {
-          console.log(`Update code error: ${err}`);
-        });
+      if (projectName || code || syntax) {
+        await updateProject(projectId, { projectName, code, syntax, userId });
+        await modifyProjectEditStatus(projectId, userId, { isEditing: false });
+        io.to(projectId).emit('serverProjectInfoSync', { projectId, projectName, code, syntax });
+      }
+
+      if (isEditing || currectCursor) {
+        await modifyProjectEditStatus(projectId, userId, isOnline, isEditing, currectCursor);
+        io.to(projectId).emit('serverProjectInfoSync', { projectId, userId, isOnline, isEditing, currectCursor });
+      }
     });
 
     socket.on('clientEnterProject', (projectId, userId) => {

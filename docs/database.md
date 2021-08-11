@@ -44,5 +44,9 @@
     userId  用户ID ObjectId
     isOnline  是否在线 Boolean
     isEditing  是否正在编辑 Boolean
+    currectCursor: {  当前光标位置信息
+      lineNumber  行数 Number
+      column  列数（在行的第几个字符） Number
+    }
   }
   ```
