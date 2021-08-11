@@ -10,6 +10,25 @@ const {
 const { projectInfoCollection, projectEditCollection } = require('../database/project');
 const { userCollection } = require('../database/user');
 
+const expectProjectQueryResult = (projectId, userId) => ({
+  _id: projectId,
+  projectName: 'Project1',
+  code: '',
+  syntax: 'javascript',
+  available: true,
+  createUser: userId,
+  isTop: false,
+  editInfo: [
+    {
+      userId,
+      userName: 'Grace',
+      avatar: 'img-001.jpg',
+      isEditing: false,
+      isOnline: true,
+    },
+  ],
+});
+
 describe('Project module', () => {
   afterAll(async () => {
     await dbClose();
@@ -28,26 +47,7 @@ describe('Project module', () => {
     const createdProjectId = createProjectResult.data[0]._id;
     const queryResult = await queryProjectList({ _id: createdProjectId });
 
-    expect(queryResult).toMatchObject([
-      {
-        _id: createdProjectId,
-        projectName: 'Project1',
-        code: '',
-        syntax: 'javascript',
-        available: true,
-        createUser: insertUserResult.insertedId,
-        isTop: false,
-        editInfo: [
-          {
-            userId: insertUserResult.insertedId,
-            userName: 'Grace',
-            avatar: 'img-001.jpg',
-            isEditing: false,
-            isOnline: true,
-          },
-        ],
-      },
-    ]);
+    expect(queryResult).toMatchObject([expectProjectQueryResult(createdProjectId, insertUserResult.insertedId)]);
 
     expect(queryResult[0]).toHaveProperty('hash');
     expect(queryResult[0].createTime).toEqual(queryResult[0].updateTime);
@@ -93,24 +93,7 @@ describe('Project module', () => {
     const queryResult = await queryProjectList({ _id: createdProjectId });
 
     expect(queryResult).toMatchObject([
-      {
-        _id: createdProjectId,
-        projectName: 'Project1',
-        code: '',
-        syntax: 'go',
-        available: true,
-        createUser: insertUserResult.insertedId,
-        isTop: false,
-        editInfo: [
-          {
-            userId: insertUserResult.insertedId,
-            userName: 'Grace',
-            avatar: 'img-001.jpg',
-            isEditing: false,
-            isOnline: true,
-          },
-        ],
-      },
+      { ...expectProjectQueryResult(createdProjectId, insertUserResult.insertedId), syntax: 'go' },
     ]);
 
     expect(queryResult[0]).toHaveProperty('hash');
@@ -158,13 +141,7 @@ describe('Project module', () => {
 
     expect(queryResult1).toMatchObject([
       {
-        _id: createdProjectId,
-        projectName: 'Project1',
-        code: '',
-        syntax: 'javascript',
-        available: true,
-        createUser: insertUserResult1.insertedId,
-        isTop: false,
+        ...expectProjectQueryResult(createdProjectId, insertUserResult1.insertedId),
         editInfo: [
           {
             userId: insertUserResult1.insertedId,
@@ -189,13 +166,7 @@ describe('Project module', () => {
 
     expect(queryResult2).toMatchObject([
       {
-        _id: createdProjectId,
-        projectName: 'Project1',
-        code: '',
-        syntax: 'javascript',
-        available: true,
-        createUser: insertUserResult1.insertedId,
-        isTop: false,
+        ...expectProjectQueryResult(createdProjectId, insertUserResult1.insertedId),
         editInfo: [
           {
             userId: insertUserResult1.insertedId,
