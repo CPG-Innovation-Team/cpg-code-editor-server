@@ -95,10 +95,25 @@ const modifyProjectEditStatus = async (projectId, userId, data) => {
   return { soccess: insertResult.acknowledged };
 };
 
+const saveClientProjectUpdateAndEmit = async (param) => {
+  const { projectId, projectName, code, syntax, userId, isOnline, isEditing, currectCursor } = param;
+  if (projectName || code || syntax) {
+    await updateProject(projectId, { projectName, code, syntax, userId });
+    await modifyProjectEditStatus(projectId, userId, { isEditing: false });
+    return { projectId, projectName, code, syntax };
+  }
+  if (isEditing || currectCursor) {
+    await modifyProjectEditStatus(projectId, userId, isOnline, isEditing, currectCursor);
+    return { projectId, userId, isOnline, isEditing, currectCursor };
+  }
+  return null;
+};
+
 module.exports = {
   queryProjectList,
   createProject,
   updateProject,
   removeProject,
   modifyProjectEditStatus,
+  saveClientProjectUpdateAndEmit,
 };
