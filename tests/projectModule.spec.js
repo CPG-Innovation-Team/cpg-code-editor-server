@@ -6,6 +6,7 @@ const {
   updateProject,
   removeProject,
   modifyProjectEditStatus,
+  saveClientProjectUpdateAndEmit,
 } = require('../modules/project');
 const { projectInfoCollection, projectEditCollection } = require('../database/project');
 const { userCollection } = require('../database/user');
@@ -185,5 +186,51 @@ describe('Project module', () => {
         ],
       },
     ]);
+  });
+
+  it('Client update project info, expect update project info in database and return correct emit data', async () => {
+    const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
+
+    const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
+    const createdProjectId = createProjectResult.data[0]._id;
+
+    const updateParam = {
+      projectName: 'Project1',
+      code: 'TEST_CODE',
+      syntax: 'sql',
+    };
+
+    const emitObject = await saveClientProjectUpdateAndEmit({
+      ...updateParam,
+      projectId: createdProjectId,
+      userId: insertUserResult.insertedId,
+    });
+    const dbFindResult = await projectInfoCollection.find({ _id: createdProjectId }).toArray();
+
+    expect(dbFindResult).toMatchObject([{ ...updateParam, _id: createdProjectId }]);
+    expect(emitObject).toEqual({ ...updateParam, projectId: createdProjectId });
+  });
+
+  it('Client update user edit info of project, expect update project edit info in database and return correct emit data', async () => {
+    const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
+
+    const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
+    const createdProjectId = createProjectResult.data[0]._id;
+
+    const updateParam = {
+      projectId: createdProjectId,
+      userId: insertUserResult.insertedId,
+      isOnline: true,
+      isEditing: true,
+      currentCursor: { lineNumber: 3, column: 10 },
+    };
+
+    const emitObject = await saveClientProjectUpdateAndEmit(updateParam);
+    const dbFindResult = await projectEditCollection
+      .find({ projectId: createdProjectId, userId: insertUserResult.insertedId })
+      .toArray();
+
+    expect(dbFindResult).toMatchObject([updateParam]);
+    expect(emitObject).toEqual(updateParam);
   });
 });
