@@ -76,7 +76,7 @@
     userId: 当前编辑用户ID String 必填
     isOnline: 是否在线 Boolean
     isEditing: 是否正在编辑 Boolean
-    currectCursor: {  当前用户光标位置信息
+    currentCursor: {  当前用户光标位置信息
       lineNumber: 行数 Number
       column: 列数（在行的第几个字符） Number
     }
@@ -98,7 +98,7 @@
       userId: 用户ID String
       isOnline: 是否在线 Boolean
       isEditing: 是否正在编辑 Boolean
-      currectCursor: {  用户光标位置信息
+      currentCursor: {  用户光标位置信息
         lineNumber: 行数 Number
         column: 列数（在行的第几个字符） Number
       }

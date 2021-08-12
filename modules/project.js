@@ -58,7 +58,7 @@ const createProject = async (userId, projectName, syntax) => {
       userId: ObjectId(userId),
       isOnline: true,
       isEditing: false,
-      currectCursor: null,
+      currentCursor: null,
     });
 
     if (insertProjectEditResult.acknowledged) {
@@ -96,15 +96,15 @@ const modifyProjectEditStatus = async (projectId, userId, data) => {
 };
 
 const saveClientProjectUpdateAndEmit = async (param) => {
-  const { projectId, projectName, code, syntax, userId, isOnline, isEditing, currectCursor } = param;
+  const { projectId, projectName, code, syntax, userId, isOnline, isEditing, currentCursor } = param;
   if (projectName || code || syntax) {
     await updateProject(projectId, { projectName, code, syntax, userId });
     await modifyProjectEditStatus(projectId, userId, { isEditing: false });
     return { projectId, projectName, code, syntax };
   }
-  if (isEditing || currectCursor) {
-    await modifyProjectEditStatus(projectId, userId, isOnline, isEditing, currectCursor);
-    return { projectId, userId, isOnline, isEditing, currectCursor };
+  if (isOnline || isEditing || currentCursor) {
+    await modifyProjectEditStatus(projectId, userId, isOnline, isEditing, currentCursor);
+    return { projectId, userId, isOnline, isEditing, currentCursor };
   }
   return null;
 };
