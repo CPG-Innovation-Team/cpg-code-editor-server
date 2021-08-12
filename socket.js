@@ -1,5 +1,5 @@
 const { Server } = require('socket.io');
-const { queryProjectList, updateProject, modifyProjectEditStatus } = require('./modules/project');
+const { queryProjectList, modifyProjectEditStatus, saveClientProjectUpdateAndEmit } = require('./modules/project');
 
 const socketExport = {};
 
