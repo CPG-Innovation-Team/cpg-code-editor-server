@@ -8,6 +8,7 @@ const {
   modifyProjectEditStatus,
   saveClientProjectUpdateAndEmit,
   clientEnterProject,
+  clientOffline,
 } = require('../modules/project');
 const { projectInfoCollection, projectEditCollection } = require('../database/project');
 const { userCollection } = require('../database/user');
@@ -235,12 +236,13 @@ describe('Project module', () => {
     expect(emitObject).toEqual(updateParam);
   });
 
-  it('Client enter project then update online status and socket ID', async () => {
+  it('Client enter project and offline, expect update online status and socket ID', async () => {
     const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
     const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
     const createdProjectId = createProjectResult.data[0]._id;
+    const mockSocketId = 'SOCKET_ID_MOCK_001';
 
-    await clientEnterProject(createdProjectId, insertUserResult.insertedId, 'SOCKET_ID_MOCK_001');
+    await clientEnterProject(createdProjectId, insertUserResult.insertedId, mockSocketId);
     const dbFindResult = await projectEditCollection
       .find({ projectId: createdProjectId, userId: insertUserResult.insertedId })
       .toArray();
@@ -248,8 +250,23 @@ describe('Project module', () => {
       {
         projectId: createdProjectId,
         userId: insertUserResult.insertedId,
-        socketId: 'SOCKET_ID_MOCK_001',
+        socketId: mockSocketId,
         isOnline: true,
+        isEditing: false,
+        currentCursor: null,
+      },
+    ]);
+
+    await clientOffline(mockSocketId);
+    const dbFindResult2 = await projectEditCollection
+      .find({ projectId: createdProjectId, userId: insertUserResult.insertedId })
+      .toArray();
+    expect(dbFindResult2).toMatchObject([
+      {
+        projectId: createdProjectId,
+        userId: insertUserResult.insertedId,
+        socketId: null,
+        isOnline: false,
         isEditing: false,
         currentCursor: null,
       },
