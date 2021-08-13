@@ -109,6 +109,19 @@ const saveClientProjectUpdateAndEmit = async (param) => {
   return null;
 };
 
+const clientEnterProject = async (projectId, userId) => {
+  modifyProjectEditStatus(projectId, userId, { isOnline: true });
+  const projectInfo = await queryProjectList({ _id: projectId });
+  return {
+    projectId,
+    code: projectInfo[0].code,
+    editUser: {
+      userId,
+      isOnline: true,
+    },
+  };
+};
+
 module.exports = {
   queryProjectList,
   createProject,
@@ -116,4 +129,5 @@ module.exports = {
   removeProject,
   modifyProjectEditStatus,
   saveClientProjectUpdateAndEmit,
+  clientEnterProject,
 };
