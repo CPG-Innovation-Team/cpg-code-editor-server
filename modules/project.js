@@ -103,7 +103,11 @@ const saveClientProjectUpdateAndEmit = async (param) => {
     return { projectId, projectName, code, syntax };
   }
   if (isOnline || isEditing || currentCursor) {
-    await modifyProjectEditStatus(projectId, userId, { isOnline, isEditing, currentCursor });
+    const updateData = { isOnline, isEditing, currentCursor };
+    if (isOnline === false) {
+      updateData.socketId = null;
+    }
+    await modifyProjectEditStatus(projectId, userId, updateData);
     return { projectId, userId, isOnline, isEditing, currentCursor };
   }
   return null;
