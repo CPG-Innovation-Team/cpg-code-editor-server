@@ -33,6 +33,9 @@ const expectProjectQueryResult = (projectId, userId) => ({
 });
 
 describe('Project module', () => {
+  let insertUserResult;
+  let createdProjectId;
+
   afterAll(async () => {
     await dbClose();
   });
@@ -41,34 +44,28 @@ describe('Project module', () => {
     await projectInfoCollection.deleteMany({});
     await projectEditCollection.deleteMany({});
     await userCollection.deleteMany({});
+
+    insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
+    const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
+    createdProjectId = createProjectResult.data[0]._id;
   });
 
   it('Create a project then get the correct query result with edit info', async () => {
-    const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
-
-    const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
-    const createdProjectId = createProjectResult.data[0]._id;
     const queryResult = await queryProjectList({ _id: createdProjectId });
 
     expect(queryResult).toMatchObject([expectProjectQueryResult(createdProjectId, insertUserResult.insertedId)]);
-
     expect(queryResult[0]).toHaveProperty('hash');
     expect(queryResult[0].createTime).toEqual(queryResult[0].updateTime);
   });
 
   it('Create 5 projects and top the second project then get the correct query result with correct sequency', async () => {
-    const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
-
-    const createProjectResult1 = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
     const createProjectResult2 = await createProject(insertUserResult.insertedId, 'Project2', 'javascript');
     const createProjectResult3 = await createProject(insertUserResult.insertedId, 'Project3', 'javascript');
     const createProjectResult4 = await createProject(insertUserResult.insertedId, 'Project4', 'javascript');
     const createProjectResult5 = await createProject(insertUserResult.insertedId, 'Project5', 'javascript');
 
     await updateProject(createProjectResult2.data[0]._id, { isTop: true });
-
     const findResult = await queryProjectList({});
-
     const expectedProjectData = {
       code: '',
       syntax: 'javascript',
@@ -76,46 +73,33 @@ describe('Project module', () => {
       createUser: insertUserResult.insertedId,
       isTop: false,
     };
-
     expect(findResult).toMatchObject([
       { _id: createProjectResult2.data[0]._id, projectName: 'Project2', ...expectedProjectData, isTop: true },
       { _id: createProjectResult5.data[0]._id, projectName: 'Project5', ...expectedProjectData },
       { _id: createProjectResult4.data[0]._id, projectName: 'Project4', ...expectedProjectData },
       { _id: createProjectResult3.data[0]._id, projectName: 'Project3', ...expectedProjectData },
-      { _id: createProjectResult1.data[0]._id, projectName: 'Project1', ...expectedProjectData },
+      { _id: createdProjectId, projectName: 'Project1', ...expectedProjectData },
     ]);
   });
 
   it('Create a project and update syntax then get the correct updated query result', async () => {
-    const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
-
-    const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
-    const createdProjectId = createProjectResult.data[0]._id;
-
     await updateProject(createdProjectId, { syntax: 'go' });
     const queryResult = await queryProjectList({ _id: createdProjectId });
 
     expect(queryResult).toMatchObject([
       { ...expectProjectQueryResult(createdProjectId, insertUserResult.insertedId), syntax: 'go' },
     ]);
-
     expect(queryResult[0]).toHaveProperty('hash');
     expect(queryResult[0]).toHaveProperty('createTime');
     expect(queryResult[0]).toHaveProperty('updateTime');
   });
 
   it('Create a project and remove it then get the correct result in both query and database record', async () => {
-    const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
-
-    const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
-    const createdProjectId = createProjectResult.data[0]._id;
-
     await removeProject(createdProjectId.toString());
     const queryResult = await queryProjectList({ _id: createdProjectId });
     const dbFindResult = await projectInfoCollection.find({ _id: createdProjectId }).toArray();
 
     expect(queryResult).toEqual([]);
-
     expect(dbFindResult).toMatchObject([
       {
         _id: createdProjectId,
@@ -133,21 +117,16 @@ describe('Project module', () => {
   });
 
   it('Create a project and modify edit status then get the correct query result', async () => {
-    const insertUserResult1 = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
     const insertUserResult2 = await userCollection.insertOne({ userName: 'Tony', avatar: 'img-002.jpg' });
-
-    const createProjectResult = await createProject(insertUserResult1.insertedId, 'Project1', 'javascript');
-    const createdProjectId = createProjectResult.data[0]._id;
-
     await modifyProjectEditStatus(createdProjectId, insertUserResult2.insertedId, { isOnline: true, isEditing: false });
     const queryResult1 = await queryProjectList({ _id: createdProjectId });
 
     expect(queryResult1).toMatchObject([
       {
-        ...expectProjectQueryResult(createdProjectId, insertUserResult1.insertedId),
+        ...expectProjectQueryResult(createdProjectId, insertUserResult.insertedId),
         editInfo: [
           {
-            userId: insertUserResult1.insertedId,
+            userId: insertUserResult.insertedId,
             userName: 'Grace',
             avatar: 'img-001.jpg',
             isEditing: false,
@@ -169,10 +148,10 @@ describe('Project module', () => {
 
     expect(queryResult2).toMatchObject([
       {
-        ...expectProjectQueryResult(createdProjectId, insertUserResult1.insertedId),
+        ...expectProjectQueryResult(createdProjectId, insertUserResult.insertedId),
         editInfo: [
           {
-            userId: insertUserResult1.insertedId,
+            userId: insertUserResult.insertedId,
             userName: 'Grace',
             avatar: 'img-001.jpg',
             isEditing: false,
@@ -191,17 +170,11 @@ describe('Project module', () => {
   });
 
   it('Client update project info, expect update project info in database and return correct emit data', async () => {
-    const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
-
-    const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
-    const createdProjectId = createProjectResult.data[0]._id;
-
     const updateParam = {
       projectName: 'Project1',
       code: 'TEST_CODE',
       syntax: 'sql',
     };
-
     const emitObject = await saveClientProjectUpdateAndEmit({
       ...updateParam,
       projectId: createdProjectId,
@@ -214,11 +187,6 @@ describe('Project module', () => {
   });
 
   it('Client update user edit info of project, expect update project edit info in database and return correct emit data', async () => {
-    const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
-
-    const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
-    const createdProjectId = createProjectResult.data[0]._id;
-
     const updateParam = {
       projectId: createdProjectId,
       userId: insertUserResult.insertedId,
@@ -237,9 +205,6 @@ describe('Project module', () => {
   });
 
   it('Client enter project and offline, expect update online status and socket ID', async () => {
-    const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
-    const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
-    const createdProjectId = createProjectResult.data[0]._id;
     const mockSocketId = 'SOCKET_ID_MOCK_001';
 
     await clientEnterProject(createdProjectId, insertUserResult.insertedId, mockSocketId);
