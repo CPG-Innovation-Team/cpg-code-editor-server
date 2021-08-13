@@ -1,5 +1,5 @@
 const { Server } = require('socket.io');
-const { saveClientProjectUpdateAndEmit, clientEnterProject } = require('./modules/project');
+const { saveClientProjectUpdateAndEmit, clientEnterProject, clientOffline } = require('./modules/project');
 
 const socketExport = {};
 
@@ -15,6 +15,7 @@ socketExport.getSocketIO = (server) => {
     console.log(`User connected, socketId: ${socket.id}`);
     socket.on('disconnect', () => {
       console.log(`User disconnected, socketId: ${socket.id}`);
+      clientOffline(socket.id);
     });
 
     socket.on('clientUpdateProjectInfo', async (socketRes) => {

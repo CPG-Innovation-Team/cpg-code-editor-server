@@ -126,6 +126,11 @@ const clientEnterProject = async (projectId, userId, socketId) => {
   };
 };
 
+const clientOffline = async (socketId) => {
+  const updateResult = await dbUpdateProjectEdit({ socketId }, { isOnline: false, socketId: null });
+  return { success: updateResult.acknowledged };
+};
+
 module.exports = {
   queryProjectList,
   createProject,
@@ -134,4 +139,5 @@ module.exports = {
   modifyProjectEditStatus,
   saveClientProjectUpdateAndEmit,
   clientEnterProject,
+  clientOffline,
 };
