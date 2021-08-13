@@ -7,6 +7,7 @@ const {
   removeProject,
   modifyProjectEditStatus,
   saveClientProjectUpdateAndEmit,
+  clientEnterProject,
 } = require('../modules/project');
 const { projectInfoCollection, projectEditCollection } = require('../database/project');
 const { userCollection } = require('../database/user');
@@ -232,5 +233,26 @@ describe('Project module', () => {
 
     expect(dbFindResult).toMatchObject([updateParam]);
     expect(emitObject).toEqual(updateParam);
+  });
+
+  it('Client enter project then update online status and socket ID', async () => {
+    const insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
+    const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
+    const createdProjectId = createProjectResult.data[0]._id;
+
+    await clientEnterProject(createdProjectId, insertUserResult.insertedId, 'SOCKET_ID_MOCK_001');
+    const dbFindResult = await projectEditCollection
+      .find({ projectId: createdProjectId, userId: insertUserResult.insertedId })
+      .toArray();
+    expect(dbFindResult).toMatchObject([
+      {
+        projectId: createdProjectId,
+        userId: insertUserResult.insertedId,
+        socketId: 'SOCKET_ID_MOCK_001',
+        isOnline: true,
+        isEditing: false,
+        currentCursor: null,
+      },
+    ]);
   });
 });
