@@ -109,8 +109,8 @@ const saveClientProjectUpdateAndEmit = async (param) => {
   return null;
 };
 
-const clientEnterProject = async (projectId, userId) => {
-  modifyProjectEditStatus(projectId, userId, { isOnline: true });
+const clientEnterProject = async (projectId, userId, socketId) => {
+  modifyProjectEditStatus(projectId, userId, { isOnline: true, socketId });
   const projectInfo = await queryProjectList({ _id: projectId });
   return {
     projectId,

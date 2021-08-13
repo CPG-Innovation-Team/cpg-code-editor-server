@@ -29,7 +29,7 @@ socketExport.getSocketIO = (server) => {
     socket.on('clientEnterProject', async (projectId, userId) => {
       socket.join(projectId);
 
-      const emitObject = await clientEnterProject(projectId, userId);
+      const emitObject = await clientEnterProject(projectId, userId, socket.id);
       io.to(projectId).emit('serverProjectInfoSync', emitObject);
     });
   });

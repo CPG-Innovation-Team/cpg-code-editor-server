@@ -42,6 +42,7 @@
   {
     projectId  项目ID ObjectId
     userId  用户ID ObjectId
+    socketId  客户端与服务端连接SocketID String
     isOnline  是否在线 Boolean
     isEditing  是否正在编辑 Boolean
     currentCursor: {  当前光标位置信息
