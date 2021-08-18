@@ -6,15 +6,13 @@ script:
 - npm test
 deploy:
   provider: elasticbeanstalk
-  access_key_id: AKIAYAXKG7IIGEUB3UUQ
-  secret_access_key:
-    secure: uVh3MzvoxVg0wGQNHQA6USl7cZeBrR3SVZer+ZHPLF30jSOqAiBR3HFbanz80065zFm1BU90piVhU7vQPnqVe6FLIKjOEolxty2iO6crSlxU74SJCNF7Wl6s9f5iF9qK0CXhwPdRgT36IannzEtwjWNCCJ+qzq1eOswYNjlGl9l3iShunTvYCGVnq8tmYKN1zT+c7xqEYf+rM3EpAokjgBtHe28Z/1MFjDhVl/vFr33JCKcKJGDsb1ZDaIxxMrQAUcN/T1Q43DVJZVrNkUvJGrdOiCFDGyH/sY/Xl0U50qn5w+r6IwZGJCNck6dBXLAuVxmUYYoNWux45WtPiuwpHOWTHGewWECjkaGh4s92bJKD0l9tISo92OXCgiNPj0lwselCaXdqvVfYoy99DfoRnxcgtJW0rNYrkkhuDO5imElwPvcuy6bDTAnYnGurNNvXKAqJbX7qfzSN1tnc82EKMURIPNL9TwQJHkaVhlxltoz1uOWs6uE4wqiBSQXoQu1UaHMVe2CVGgg/QBH3zsjQLknFXVgtlukOwYgb5IVwosogNiU9lVzJoaaL1efWNIwcO//r2Pw/homdrWbv6dV+4pbHlnX8wsa26OPXjcbK2NcDg+2uWSX/X1htUeJl8f2zk88r76dj8HQOTpKOZaXd47j7c8SphUmXriMLqdBa2AM=
-  region: cn-north-1
+  access_key_id: $AWS_KEY_ID
+  secret_access_key: $AWS_KEY_SECRET
+  region: us-west-1
   app: cpg-code-editor-server
   env: Cpgcodeeditorserver-env
-  bucket_name: elasticbeanstalk-cn-north-1-551320746512
+  bucket_name: elasticbeanstalk-us-west-1-435304973253
   on:
     repo: cpg-innovation-team/cpg-code-editor-server
-  skip_cleanup: 'true'
 notifications:
   webhooks: https://open.feishu.cn/officialapp/notify/c4a1011904c5dc2efb332f1f80d817a88c8d829a2976d8c2c6f8bc4230c6e715
