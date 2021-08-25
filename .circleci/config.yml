@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   node: circleci/node@4.7.0
-  eb: circleci/aws-elastic-beanstalk@1.0.0
+  eb: circleci/aws-elastic-beanstalk@2.0.0
 
 jobs:
   lint-and-test:
@@ -23,7 +23,7 @@ workflows:
     jobs:
       - lint-and-test
       - eb/deploy:
-          context: cpg-code-editor-server
+          application-name: cpg-code-editor-server
           environment-name: Cpgcodeeditorserver-env
           label: version-<<pipeline.number>>
       
