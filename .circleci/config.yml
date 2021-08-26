@@ -24,14 +24,14 @@ workflows:
       - lint-and-test
       - eb/deploy:
           application-name: cpg-code-editor-server
-          environment-name: cpg-code-editor-server-${CIRCLE_BRANCH}
+          environment-name: CES-${CIRCLE_BRANCH}
           label: version-<<pipeline.number>>
           filters:
             branches:
               ignore: master
       - eb/deploy:
           application-name: cpg-code-editor-server
-          environment-name: cpg-code-editor-server-prod
+          environment-name: CES-prod
           label: version-<<pipeline.number>>
           filters:
             branches:
