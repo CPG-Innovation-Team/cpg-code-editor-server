@@ -17,13 +17,30 @@ jobs:
       - run:
           name: test
           command: npm test
+  deploy:
+    docker:
+      - image: cimg/node:14.17
+    steps:
+      - run:
+          name: install deployment dependencies
+          working_directory: /
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get install python-pip python-dev build-essential
+            sudo pip install awsebcli --upgrade
+      - run:
+          name: deploy
+          command: eb deploy Cpgcodeeditorserver-env
+
+        
 
 workflows:
   default:
     jobs:
       - lint-and-test
-      - eb/deploy:
-          application-name: cpg-code-editor-server
-          environment-name: Cpgcodeeditorserver-env
-          label: version-<<pipeline.number>>
+      - deploy
+      # - eb/deploy:
+      #     application-name: cpg-code-editor-server
+      #     environment-name: Cpgcodeeditorserver-env
+      #     label: version-<<pipeline.number>>
       
