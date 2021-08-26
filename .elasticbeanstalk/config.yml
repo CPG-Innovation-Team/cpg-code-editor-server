@@ -1,0 +1,9 @@
+branch-defaults:
+  master:
+    environment: Cpgcodeeditorserver-env
+global:
+  application_name: cpg-code-editor-server
+  default_ec2_keyname: e-tj3qmhjhgz
+  default_platform: Node.js 14 running on 64bit Amazon Linux 2/5.4.4
+  default_region: us-west-1
+  sc: git
