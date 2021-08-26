@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "nodemon ./bin/www",
     "prod": "pm2 start ./bin/www",
+    "start": "node ./bin/www",
     "lint": "eslint ./ ./bin/**",
     "test": "jest",
     "prepare": "husky install"
