@@ -1,4 +1,4 @@
-const { dbClose } = require('../database/mongodb');
+const { dbConnect, dbClose } = require('../database/mongodb');
 
 const {
   queryProjectList,
@@ -36,16 +36,20 @@ describe('Project module', () => {
   let insertUserResult;
   let createdProjectId;
 
+  beforeAll(async () => {
+    await dbConnect();
+  });
+
   afterAll(async () => {
     await dbClose();
   });
 
   beforeEach(async () => {
-    await projectInfoCollection.deleteMany({});
-    await projectEditCollection.deleteMany({});
-    await userCollection.deleteMany({});
+    await projectInfoCollection().deleteMany({});
+    await projectEditCollection().deleteMany({});
+    await userCollection().deleteMany({});
 
-    insertUserResult = await userCollection.insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
+    insertUserResult = await userCollection().insertOne({ userName: 'Grace', avatar: 'img-001.jpg' });
     const createProjectResult = await createProject(insertUserResult.insertedId, 'Project1', 'javascript');
     createdProjectId = createProjectResult.data[0]._id;
   });
@@ -97,7 +101,7 @@ describe('Project module', () => {
   it('Create a project and remove it then get the correct result in both query and database record', async () => {
     await removeProject(createdProjectId.toString());
     const queryResult = await queryProjectList({ _id: createdProjectId });
-    const dbFindResult = await projectInfoCollection.find({ _id: createdProjectId }).toArray();
+    const dbFindResult = await projectInfoCollection().find({ _id: createdProjectId }).toArray();
 
     expect(queryResult).toEqual([]);
     expect(dbFindResult).toMatchObject([
@@ -117,7 +121,7 @@ describe('Project module', () => {
   });
 
   it('Create a project and modify edit status then get the correct query result', async () => {
-    const insertUserResult2 = await userCollection.insertOne({ userName: 'Tony', avatar: 'img-002.jpg' });
+    const insertUserResult2 = await userCollection().insertOne({ userName: 'Tony', avatar: 'img-002.jpg' });
     await modifyProjectEditStatus(createdProjectId, insertUserResult2.insertedId, { isOnline: true, isEditing: false });
     const queryResult1 = await queryProjectList({ _id: createdProjectId });
 
@@ -180,7 +184,7 @@ describe('Project module', () => {
       projectId: createdProjectId,
       userId: insertUserResult.insertedId,
     });
-    const dbFindResult = await projectInfoCollection.find({ _id: createdProjectId }).toArray();
+    const dbFindResult = await projectInfoCollection().find({ _id: createdProjectId }).toArray();
 
     expect(dbFindResult).toMatchObject([{ ...updateParam, _id: createdProjectId }]);
     expect(emitObject).toEqual({ ...updateParam, projectId: createdProjectId });
@@ -196,7 +200,7 @@ describe('Project module', () => {
     };
 
     const emitObject = await saveClientProjectUpdateAndEmit(updateParam);
-    const dbFindResult = await projectEditCollection
+    const dbFindResult = await projectEditCollection()
       .find({ projectId: createdProjectId, userId: insertUserResult.insertedId })
       .toArray();
 
@@ -208,7 +212,7 @@ describe('Project module', () => {
     const mockSocketId = 'SOCKET_ID_MOCK_001';
 
     await clientEnterProject(createdProjectId, insertUserResult.insertedId, mockSocketId);
-    const dbFindResult = await projectEditCollection
+    const dbFindResult = await projectEditCollection()
       .find({ projectId: createdProjectId, userId: insertUserResult.insertedId })
       .toArray();
     expect(dbFindResult).toMatchObject([
@@ -223,7 +227,7 @@ describe('Project module', () => {
     ]);
 
     await clientOffline(mockSocketId);
-    const dbFindResult2 = await projectEditCollection
+    const dbFindResult2 = await projectEditCollection()
       .find({ projectId: createdProjectId, userId: insertUserResult.insertedId })
       .toArray();
     expect(dbFindResult2).toMatchObject([
