@@ -1,4 +1,4 @@
-const { dbClose } = require('../database/mongodb');
+const { dbConnect, dbClose } = require('../database/mongodb');
 
 const {
   dbFindProjectInfo,
@@ -13,14 +13,18 @@ const {
 const { userCollection } = require('../database/user');
 
 describe('Project database operation', () => {
+  beforeAll(async () => {
+    await dbConnect();
+  });
+
   afterAll(async () => {
     await dbClose();
   });
 
   beforeEach(async () => {
-    await projectInfoCollection.deleteMany({});
-    await projectEditCollection.deleteMany({});
-    await userCollection.deleteMany({});
+    await projectInfoCollection().deleteMany({});
+    await projectEditCollection().deleteMany({});
+    await userCollection().deleteMany({});
   });
 
   it('Insert a project into collection then find it', async () => {
@@ -58,7 +62,7 @@ describe('Project database operation', () => {
 
   it('Insert a project edit info with user info into collection then query the same project with user info', async () => {
     const mockUserParam = { userName: 'Grace', avatar: 'img-001.jpg' };
-    const insertUserResult = await userCollection.insertOne(mockUserParam);
+    const insertUserResult = await userCollection().insertOne(mockUserParam);
 
     const mockProjectEditParam = { projectId: 'project001', userId: insertUserResult.insertedId };
     await dbInsertProjectEdit(mockProjectEditParam);
@@ -69,7 +73,7 @@ describe('Project database operation', () => {
 
   it('Insert a project edit info with user info into collection then query the same project with user info', async () => {
     const mockUserParam = { userName: 'Grace', avatar: 'img-001.jpg' };
-    const insertUserResult = await userCollection.insertOne(mockUserParam);
+    const insertUserResult = await userCollection().insertOne(mockUserParam);
 
     const mockProjectEditParam = { projectId: 'project001', userId: insertUserResult.insertedId, isOnline: true };
     await dbInsertProjectEdit(mockProjectEditParam);
@@ -80,7 +84,7 @@ describe('Project database operation', () => {
 
   it('Insert a project edit info with user info into collection and update online status then query the updated record', async () => {
     const mockUserParam = { userName: 'Grace', avatar: 'img-001.jpg' };
-    const insertUserResult = await userCollection.insertOne(mockUserParam);
+    const insertUserResult = await userCollection().insertOne(mockUserParam);
 
     const mockProjectEditParam = { projectId: 'project001', userId: insertUserResult.insertedId };
     await dbInsertProjectEdit({ ...mockProjectEditParam, isOnline: true });

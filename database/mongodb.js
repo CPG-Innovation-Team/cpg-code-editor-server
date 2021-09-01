@@ -4,8 +4,19 @@ const DB_URL = process.env.NODE_ENV === 'test' ? process.env.MONGO_URL : 'mongod
 const DB_NAME = 'cpg_code_editor';
 
 const client = new MongoClient(DB_URL);
-client.connect();
-const db = client.db(DB_NAME);
+let db;
+
+const dbConnect = async (callback) => {
+  const connection = await client.connect();
+  if (callback) {
+    callback();
+  }
+  db = connection.db(DB_NAME);
+};
+
+const getDB = () => {
+  return db;
+};
 
 const dbClose = () => {
   client.close();
@@ -16,4 +27,4 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-module.exports = { db, dbClose };
+module.exports = { getDB, dbConnect, dbClose };
