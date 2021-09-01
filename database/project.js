@@ -1,10 +1,14 @@
-const { db } = require('./mongodb');
+const { getDB } = require('./mongodb');
 
-const projectInfoCollection = db.collection('project_info');
-const projectEditCollection = db.collection('project_edit_info');
+const projectInfoCollection = () => {
+  return getDB().collection('project_info');
+};
+const projectEditCollection = () => {
+  return getDB().collection('project_edit_info');
+};
 
 const dbFindProjectInfo = async (param) =>
-  projectInfoCollection
+  projectInfoCollection()
     .aggregate([
       { $match: param },
       {
@@ -19,12 +23,12 @@ const dbFindProjectInfo = async (param) =>
     ])
     .toArray();
 
-const dbInsertProjectInfo = async (param) => projectInfoCollection.insertOne({ ...param });
+const dbInsertProjectInfo = async (param) => projectInfoCollection().insertOne({ ...param });
 
-const dbUpdateProjectInfo = async (queryParam, data) => projectInfoCollection.updateOne(queryParam, { $set: data });
+const dbUpdateProjectInfo = async (queryParam, data) => projectInfoCollection().updateOne(queryParam, { $set: data });
 
 const dbFindProjectEdit = async (param) =>
-  projectEditCollection
+  projectEditCollection()
     .aggregate([
       { $match: param },
       {
@@ -44,9 +48,9 @@ const dbFindProjectEdit = async (param) =>
     ])
     .toArray();
 
-const dbInsertProjectEdit = async (param) => projectEditCollection.insertOne({ ...param });
+const dbInsertProjectEdit = async (param) => projectEditCollection().insertOne({ ...param });
 
-const dbUpdateProjectEdit = async (queryParam, data) => projectEditCollection.updateOne(queryParam, { $set: data });
+const dbUpdateProjectEdit = async (queryParam, data) => projectEditCollection().updateOne(queryParam, { $set: data });
 
 module.exports = {
   dbFindProjectInfo,
