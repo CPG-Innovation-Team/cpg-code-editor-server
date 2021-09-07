@@ -15,6 +15,7 @@ socketExport.getSocketIO = (server) => {
     console.log(`User connected, socketId: ${socket.id}`);
     socket.on('disconnect', () => {
       console.log(`User disconnected, socketId: ${socket.id}`);
+      io.emit('userDisconnected');
       clientOffline(socket.id);
     });
 
