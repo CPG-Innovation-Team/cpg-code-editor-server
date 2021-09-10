@@ -25,9 +25,8 @@ jobs:
       - eb/setup
       - run:
           command: |
-            eb create cpg-code-editor-server-prod
-            eb deploy cpg-code-editor-server-prod
-            eb status
+            eb create
+            eb deploy
 
 workflows:
   default:
