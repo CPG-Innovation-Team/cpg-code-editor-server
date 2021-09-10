@@ -17,30 +17,20 @@ jobs:
       - run:
           name: test
           command: npm test
+  build-and-deploy:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - checkout
+      - eb/setup
+      - run:
+          command: |
+            eb create my-environment
+            eb deploy my-environment
+            eb status
 
 workflows:
   default:
     jobs:
       - lint-and-test
-      - eb/deploy:
-          application-name: cpg-code-editor-server
-          environment-name: cpg-code-editor-server-dev
-          label: version-<<pipeline.number>>
-          filters:
-            branches:
-              ignore: master, staging
-      - eb/deploy:
-          application-name: cpg-code-editor-server
-          environment-name: cpg-code-editor-server-staging
-          label: version-<<pipeline.number>>
-          filters:
-            branches:
-              only: staging
-      - eb/deploy:
-          application-name: cpg-code-editor-server
-          environment-name: cpg-code-editor-server-prod
-          label: version-<<pipeline.number>>
-          filters:
-            branches:
-              only: master
-      
+      - build-and-deploy      
