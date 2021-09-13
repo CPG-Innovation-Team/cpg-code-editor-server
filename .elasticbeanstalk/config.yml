@@ -6,6 +6,6 @@ branch-defaults:
 global:
   application_name: cpg-code-editor-server
   default_ec2_keyname: e-rwrwchdm3i
-  default_platform: Node.js 14 running on 64bit Amazon Linux 2/5.4.4
+  default_platform: Node.js
   default_region: us-west-1
   sc: git
