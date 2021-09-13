@@ -25,11 +25,11 @@ jobs:
       - eb/setup
       - run:
           command: |
-            eb create
-            eb deploy
+            eb create cpg-code-editor-server-prod
+            eb deploy cpg-code-editor-server-prod
 
 workflows:
   default:
     jobs:
       - lint-and-test
-      - build-and-deploy      
+      - build-and-deploy
