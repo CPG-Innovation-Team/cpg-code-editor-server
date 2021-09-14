@@ -23,10 +23,10 @@ jobs:
     steps:
       - checkout
       - eb/setup
-      - eb/deploy:
-          application-name: cpg-code-editor-server
-          environment-name: cpg-code-editor-server-staging
-          label: version-<<pipeline.number>>
+      - run:
+          command: |
+            eb init cpg-code-editor-server-prod
+            eb deploy cpg-code-editor-server-prod
 
 workflows:
   default:
