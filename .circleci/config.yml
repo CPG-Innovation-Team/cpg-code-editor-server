@@ -19,7 +19,7 @@ jobs:
           command: npm test
   build-and-deploy:
     docker:
-      - image: 'cimg/base:stable'
+      - image: cimg/node:14.17
     steps:
       - checkout
       - node/install-packages
