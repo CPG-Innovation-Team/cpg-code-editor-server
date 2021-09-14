@@ -27,6 +27,8 @@ jobs:
           command: |
             eb init cpg-code-editor-server -r $AWS_DEFAULT_REGION -p node.js
             eb deploy cpg-code-editor-server-prod
+          name: Deploy to AWS Elastic Beanstalk
+          working_directory: '.'
 
 workflows:
   default:
