@@ -22,6 +22,7 @@ jobs:
       - image: 'cimg/base:stable'
     steps:
       - checkout
+      - node/install-packages
       - eb/setup
       - run:
           command: |
