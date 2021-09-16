@@ -23,13 +23,12 @@ jobs:
     steps:
       - checkout
       - node/install-packages
-      - eb/setup
       - run:
           command: |
-            sed -e '3a\MONGO_URL: ${MONGO_URL}' /home/circleci/project/ebextensions/01_envar.config
-            cat /home/circleci/project/ebextensions/01_envar.config
+            sed -e '3a\MONGO_URL: ${MONGO_URL}' /home/circleci/project/.ebextensions/01_envar.config
+            cat /home/circleci/project/.ebextensions/01_envar.config
           name: Add MongoDB URL to environment variable
-
+      - eb/setup
       - run:
           command: |
             eb init cpg-code-editor-server -r $AWS_DEFAULT_REGION -p node.js
