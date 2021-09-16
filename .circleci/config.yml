@@ -26,11 +26,11 @@ jobs:
     steps:
       - checkout
       - node/install-packages
+      - eb/setup
       - run:
           command: |
             eb setenv MONGO_URL=${MONGO_URL}
           name: Add MongoDB URL to environment variable
-      - eb/setup
       - run:
           command: |
             eb init cpg-code-editor-server -r $AWS_DEFAULT_REGION -p node.js
