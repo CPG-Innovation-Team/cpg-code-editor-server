@@ -18,6 +18,9 @@ jobs:
           name: test
           command: npm test
   build-and-deploy:
+    parameters:
+      mongoUrl:
+        type: env_var_name
     docker:
       - image: cimg/node:14.17
     steps:
@@ -25,7 +28,7 @@ jobs:
       - node/install-packages
       - run:
           command: |
-            sed -e '3a\MONGO_URL: $MONGO_URL' /home/circleci/project/.ebextensions/01_envar.config
+            sed -e '3a\MONGO_URL: ${<< parameters.mongoUrl >>}' /home/circleci/project/.ebextensions/01_envar.config
             cat /home/circleci/project/.ebextensions/01_envar.config
           name: Add MongoDB URL to environment variable
       - eb/setup
@@ -40,4 +43,5 @@ workflows:
   default:
     jobs:
       - lint-and-test
-      - build-and-deploy
+      - build-and-deploy:
+          mongoUrl: MONGO_URL
