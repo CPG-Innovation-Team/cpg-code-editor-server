@@ -28,8 +28,7 @@ jobs:
       - node/install-packages
       - run:
           command: |
-            sed -e '3a\MONGO_URL: ${<< parameters.mongoUrl >>}' /home/circleci/project/.ebextensions/01_envar.config
-            cat /home/circleci/project/.ebextensions/01_envar.config
+            eb setenv MONGO_URL=${MONGO_URL}
           name: Add MongoDB URL to environment variable
       - eb/setup
       - run:
