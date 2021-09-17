@@ -41,3 +41,6 @@ workflows:
       - lint-and-test
       - build-and-deploy:
           mongoUrl: MONGO_URL
+          filters:
+            branches:
+              only: master
