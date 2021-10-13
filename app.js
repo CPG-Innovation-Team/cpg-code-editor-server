@@ -5,6 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const { graphqlHTTP } = require('express-graphql');
 const cors = require('cors');
+const Rollbar = require('rollbar');
+
+const rollbar = new Rollbar(process.env.ROLLBAR_ACCESS_TOKEN);
 
 const schema = require('./api/schema');
 const resolver = require('./api/resolver');
@@ -36,6 +39,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors(corsOptions));
+app.use(rollbar.errorHandler());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
