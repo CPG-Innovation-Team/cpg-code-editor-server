@@ -21,6 +21,8 @@ jobs:
     parameters:
       mongoUrl:
         type: env_var_name
+      rollbarAccessToken:
+        type: env_var_name
     docker:
       - image: cimg/node:14.17
     steps:
@@ -29,8 +31,9 @@ jobs:
       - eb/setup
       - run:
           command: |
-            eb init cpg-code-editor-server -r $AWS_DEFAULT_REGION -p node.js
+            eb init cpg-code-editor-server -r ${AWS_DEFAULT_REGION} -p node.js
             eb setenv MONGO_URL=${MONGO_URL}
+            eb setenv ROLLBAR_ACCESS_TOKEN=${ROLLBAR_ACCESS_TOKEN}
             eb deploy cpg-code-editor-server-prod
           name: Deploy to AWS Elastic Beanstalk
           working_directory: '.'
@@ -41,6 +44,7 @@ workflows:
       - lint-and-test
       - build-and-deploy:
           mongoUrl: MONGO_URL
+          rollbarAccessToken: ROLLBAR_ACCESS_TOKEN
           filters:
             branches:
               only: master

@@ -5,6 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const { graphqlHTTP } = require('express-graphql');
 const cors = require('cors');
+const Rollbar = require('rollbar');
+
+const rollbar = new Rollbar(process.env.ROLLBAR_ACCESS_TOKEN);
 
 const schema = require('./api/schema');
 const resolver = require('./api/resolver');
@@ -15,6 +18,17 @@ const usersRouter = require('./routes/users');
 const app = express();
 app.disable('x-powered-by');
 
+const originWhiteList = [/\.cpgroup\.top$/];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (originWhiteList.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -24,12 +38,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
+app.use(rollbar.errorHandler());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
