@@ -9,5 +9,6 @@
     "!**/api/**",
     "!app.js"
   ],
+  "testResultsProcessor": "jest-sonar-reporter",
   "preset": "@shelf/jest-mongodb"
 }

@@ -7,8 +7,6 @@ const { graphqlHTTP } = require('express-graphql');
 const cors = require('cors');
 const Rollbar = require('rollbar');
 
-const rollbar = new Rollbar(process.env.ROLLBAR_ACCESS_TOKEN);
-
 const schema = require('./api/schema');
 const resolver = require('./api/resolver');
 
@@ -27,13 +25,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(rollbar.errorHandler());
 app.use(
   cors({
     origin: true,
     credentials: true,
   })
 );
+
+if (process.env.ROLLBAR_ACCESS_TOKEN) {
+  const rollbar = new Rollbar(process.env.ROLLBAR_ACCESS_TOKEN);
+  app.use(rollbar.errorHandler());
+}
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
