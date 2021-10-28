@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   node: circleci/node@4.7.0
   eb: circleci/aws-elastic-beanstalk@2.0.0
+  sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
   lint-and-test:
@@ -41,6 +42,8 @@ jobs:
 workflows:
   default:
     jobs:
+      - build:
+          context: sonarcloud
       - lint-and-test
       - build-and-deploy:
           mongoUrl: MONGO_URL
