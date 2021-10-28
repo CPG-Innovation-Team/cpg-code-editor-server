@@ -18,6 +18,12 @@ jobs:
       - run:
           name: test
           command: npm test
+  sonarcloud-scan:
+    docker:
+      - image: 'node:latest'
+    steps:
+      - checkout
+      - sonarcloud/scan
   build-and-deploy:
     parameters:
       mongoUrl:
@@ -42,9 +48,9 @@ jobs:
 workflows:
   default:
     jobs:
-      - build:
-          context: sonarcloud
       - lint-and-test
+      - sonarcloud-scan:
+          context: sonarcloud
       - build-and-deploy:
           mongoUrl: MONGO_URL
           rollbarAccessToken: ROLLBAR_ACCESS_TOKEN
