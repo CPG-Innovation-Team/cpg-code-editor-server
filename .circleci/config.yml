@@ -6,13 +6,7 @@ orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
-  sonarcloud-scan:
-    docker:
-      - image: cimg/node:14.17
-    steps:
-      - checkout
-      - sonarcloud/scan
-  lint-and-test:
+  lint-test:-scan
     docker:
       - image: cimg/node:14.17
     steps:
@@ -24,6 +18,7 @@ jobs:
       - run:
           name: test
           command: npm test
+      - sonarcloud/scan
   build-and-deploy:
     parameters:
       mongoUrl:
@@ -48,8 +43,7 @@ jobs:
 workflows:
   default:
     jobs:
-      - sonarcloud-scan
-      - lint-and-test
+      - lint-test-scan
       - build-and-deploy:
           mongoUrl: MONGO_URL
           rollbarAccessToken: ROLLBAR_ACCESS_TOKEN
