@@ -51,7 +51,7 @@ const createProject = async (userId, projectName, syntax) => {
     available: true,
     createUser: userId,
     isTop: false,
-    code_update: [],
+    project_code: [{ content: 'testing content' }],
   });
   if (insertProjectInfoResult.acknowledged) {
     const insertProjectEditResult = await dbInsertProjectEdit({
@@ -120,6 +120,7 @@ const clientEnterProject = async (projectId, userId, socketId) => {
   return {
     projectId,
     code: projectInfo[0].code,
+    project_code: projectInfo[0].project_code,
     editUser: {
       userId,
       isOnline: true,
