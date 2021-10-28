@@ -6,7 +6,7 @@ orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
-  lint-test:-scan
+  lint-test-scan
     docker:
       - image: cimg/node:14.17
     steps:
