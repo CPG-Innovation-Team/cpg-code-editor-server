@@ -21,11 +21,16 @@ socketExport.getSocketIO = (server) => {
 
     socket.on('clientUpdateProjectInfo', async (socketRes) => {
       socket.join(socketRes.projectId);
-
       const emitObject = await saveClientProjectUpdateAndEmit(socketRes);
       if (emitObject) {
         io.to(socketRes.projectId).emit('serverProjectInfoSync', emitObject);
       }
+    });
+
+    socket.on('clientUpdateProjectCode', async (socketRes) => {
+      socket.join(socketRes.projectId);
+      console.log(socketRes);
+      io.to(socketRes.projectId).emit('serverProjectCodeSync', socketRes);
     });
 
     socket.on('clientEnterProject', async (projectId, userId) => {
