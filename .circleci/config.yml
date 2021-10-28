@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   node: circleci/node@4.7.0
   eb: circleci/aws-elastic-beanstalk@2.0.0
-  sonarcloud: sonarsource/sonarcloud@1.0.0
+  sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
   lint-and-test:
@@ -20,7 +20,7 @@ jobs:
           command: npm test
   sonarcloud-scan:
     docker:
-      - image: 'node:latest'
+      - image: cimg/node:14.17
     steps:
       - checkout
       - sonarcloud/scan
@@ -49,8 +49,7 @@ workflows:
   default:
     jobs:
       - lint-and-test
-      - sonarcloud-scan:
-          context: sonarcloud
+      - sonarcloud-scan
       - build-and-deploy:
           mongoUrl: MONGO_URL
           rollbarAccessToken: ROLLBAR_ACCESS_TOKEN
