@@ -2,4 +2,3 @@
 node_modules
 /coverage
 globalConfig.json
-test-report.xml
