@@ -1,6 +1,7 @@
 # 在线代码编辑器后端项目
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=CPG-Innovation-Team_cpg-code-editor-server&metric=alert_status)](https://sonarcloud.io/dashboard?id=CPG-Innovation-Team_cpg-code-editor-server)
 [![Build Status](https://www.travis-ci.com/CPG-Innovation-Team/cpg-code-editor-server.svg?branch=master)](https://www.travis-ci.com/CPG-Innovation-Team/cpg-code-editor-server)
+[![codecov](https://codecov.io/gh/CPG-Innovation-Team/cpg-code-editor-server/branch/master/graph/badge.svg?token=U1BHB34KNX)](https://codecov.io/gh/CPG-Innovation-Team/cpg-code-editor-server)
 
 ## 系统依赖
 ### 需要安装 [Node.js](https://nodejs.org)
@@ -11,7 +12,6 @@
 ## 操作命令
 ### 首次运行或有依赖变更时执行安装 `npm install`
 ### 启动本地服务 `npm run dev`
-### 使用PM2启动生产环境服务 `npm run prod`
 ### 执行单元测试 `npm run test`
 ### 执行代码校验 `npm run lint`
 
@@ -52,7 +52,11 @@
 - [Socket.IO](https://socket.io/)
 - [MongoDB](https://www.mongodb.com/)
 - [GraphQL](https://graphql.org/)
-- [PM2](https://pm2.keymetrics.io/)
+
+## 集成工具
+- 自动化构建部署 [CircleCI](https://app.circleci.com/pipelines/github/CPG-Innovation-Team/cpg-code-editor-server)
+- 代码质量静态扫描 [SonarCloud](https://sonarcloud.io/project/overview?id=CPG-Innovation-Team_cpg-code-editor-server)
+- 单元测试覆盖率报告 [Codecov](https://app.codecov.io/gh/CPG-Innovation-Team/cpg-code-editor-server)
 
 ## 接口
 [后端接口文档](./docs/api.md)
