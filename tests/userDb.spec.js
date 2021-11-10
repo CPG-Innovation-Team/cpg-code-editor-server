@@ -7,7 +7,7 @@ describe('User database operation', () => {
   });
 
   afterAll(async () => {
-    await dbClose();
+    dbClose();
   });
 
   beforeEach(async () => {
