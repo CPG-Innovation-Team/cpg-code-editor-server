@@ -9,5 +9,7 @@
     "!**/api/**",
     "!app.js"
   ],
-  "preset": "@shelf/jest-mongodb"
+  "preset": "@shelf/jest-mongodb",
+  "maxConcurrency": 1,
+  "maxWorkers": 1
 }
