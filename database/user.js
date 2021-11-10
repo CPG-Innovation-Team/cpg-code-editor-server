@@ -5,13 +5,11 @@ const userCollection = () => {
 };
 
 const dbInsertUser = async (param) => {
-  const result = await userCollection().insertOne({ ...param });
-  return result;
+  return userCollection().insertOne({ ...param });
 };
 
 const dbUpdateUser = async (queryParam, data) => {
-  const result = await userCollection().updateOne(queryParam, { $set: data });
-  return result;
+  return userCollection().updateOne(queryParam, { $set: data });
 };
 
 module.exports = { dbInsertUser, dbUpdateUser, userCollection };
