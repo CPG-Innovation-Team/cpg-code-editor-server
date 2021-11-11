@@ -8,7 +8,7 @@ describe('User module', () => {
   });
 
   afterAll(async () => {
-    await dbClose();
+    dbClose();
   });
 
   beforeEach(async () => {

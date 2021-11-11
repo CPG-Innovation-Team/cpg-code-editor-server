@@ -23,7 +23,7 @@ const dbClose = () => {
 };
 
 process.on('SIGINT', async () => {
-  await dbClose();
+  dbClose();
   process.exit(0);
 });
 

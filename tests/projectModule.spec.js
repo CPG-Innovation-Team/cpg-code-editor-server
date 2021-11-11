@@ -41,7 +41,7 @@ describe('Project module', () => {
   });
 
   afterAll(async () => {
-    await dbClose();
+    dbClose();
   });
 
   beforeEach(async () => {
