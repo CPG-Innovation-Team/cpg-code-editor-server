@@ -135,7 +135,7 @@ const saveClientCodeUpdate = async (param) => {
       }
     } else if (codeUpdate[i].editType === 'delete') {
       for (let j = 0; j < projectCode.length; j += 1) {
-        if (projectCode[j].lineNumber >= codeUpdate[j].lineNumber) {
+        if (projectCode[j].lineNumber >= codeUpdate[i].lineNumber) {
           projectCode[j].lineNumber -= 1;
         }
       }
