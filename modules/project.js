@@ -7,7 +7,6 @@ const {
   dbFindProjectEdit,
   dbInsertProjectEdit,
   dbUpdateProjectEdit,
-  dbUpdateProjectCode,
 } = require('../database/project');
 
 const queryProjectList = async ({ _id, hash }) => {
@@ -118,6 +117,7 @@ const saveClientProjectUpdateAndEmit = async (param) => {
 
 const saveClientCodeUpdate = async (param) => {
   const { projectId, codeUpdate, userId } = param;
+  const updateTime = Date.now();
   // const updateTime = Date.now();
   // const result = await dbUpdateProjectInfo({ _id: ObjectId(projectId) }, { updateTime, ...data });
   // await dbUpdateProjectCode({ _id: ObjectId(projectId) }, { codeUpdate });
@@ -141,6 +141,7 @@ const saveClientCodeUpdate = async (param) => {
       }
     }
     const editObject = codeUpdate[i];
+    editObject.updateTime = updateTime;
     projectCode.push(editObject);
   }
   await updateProject(projectId, { projectCode });
