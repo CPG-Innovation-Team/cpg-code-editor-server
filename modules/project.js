@@ -7,6 +7,7 @@ const {
   dbFindProjectEdit,
   dbInsertProjectEdit,
   dbUpdateProjectEdit,
+  dbUpdateProjectCode,
 } = require('../database/project');
 
 const queryProjectList = async ({ _id, hash }) => {
@@ -50,8 +51,9 @@ const createProject = async (userId, projectName, syntax) => {
     syntax,
     available: true,
     createUser: userId,
+    lastModifiedUser: userId,
     isTop: false,
-    project_code: [{ content: 'testing content' }],
+    projectCode: [],
   });
   if (insertProjectInfoResult.acknowledged) {
     const insertProjectEditResult = await dbInsertProjectEdit({
@@ -99,7 +101,7 @@ const modifyProjectEditStatus = async (projectId, userId, data) => {
 const saveClientProjectUpdateAndEmit = async (param) => {
   const { projectId, projectName, code, syntax, userId, isOnline, isEditing, currentCursor } = param;
   if (projectName || code || syntax) {
-    await updateProject(projectId, { projectName, code, syntax, userId });
+    await updateProject(projectId, { projectName, code, syntax, lastModifiedUser: userId });
     await modifyProjectEditStatus(projectId, userId, { isEditing: false });
     return { projectId, projectName, code, syntax };
   }
@@ -114,13 +116,44 @@ const saveClientProjectUpdateAndEmit = async (param) => {
   return null;
 };
 
+const saveClientCodeUpdate = async (param) => {
+  const { projectId, codeUpdate, userId } = param;
+  // const updateTime = Date.now();
+  // const result = await dbUpdateProjectInfo({ _id: ObjectId(projectId) }, { updateTime, ...data });
+  // await dbUpdateProjectCode({ _id: ObjectId(projectId) }, { codeUpdate });
+  for (let i = 0; i < codeUpdate.length; i += 1) {
+    codeUpdate[i].editUser = userId;
+  }
+  const projectInfo = await queryProjectList({ _id: projectId });
+  const { projectCode } = projectInfo[0];
+  for (let i = 0; i < codeUpdate.length; i += 1) {
+    if (codeUpdate[i].editType === 'add') {
+      for (let j = 0; j < projectCode.length; j += 1) {
+        if (projectCode[j].lineNumber >= codeUpdate[i].lineNumber) {
+          projectCode[j].lineNumber += 1;
+        }
+      }
+    } else if (codeUpdate[i].editType === 'delete') {
+      for (let j = 0; j < projectCode.length; j += 1) {
+        if (projectCode[j].lineNumber >= codeUpdate[j].lineNumber) {
+          projectCode[j].lineNumber -= 1;
+        }
+      }
+    }
+    const editObject = codeUpdate[i];
+    projectCode.push(editObject);
+  }
+  await updateProject(projectId, { projectCode });
+  return { projectId, codeUpdate };
+};
+
 const clientEnterProject = async (projectId, userId, socketId) => {
   modifyProjectEditStatus(projectId, userId, { isOnline: true, socketId });
   const projectInfo = await queryProjectList({ _id: projectId });
   return {
     projectId,
     code: projectInfo[0].code,
-    project_code: projectInfo[0].project_code,
+    projectCode: projectInfo[0].projectCode,
     editUser: {
       userId,
       isOnline: true,
@@ -140,6 +173,7 @@ module.exports = {
   removeProject,
   modifyProjectEditStatus,
   saveClientProjectUpdateAndEmit,
+  saveClientCodeUpdate,
   clientEnterProject,
   clientOffline,
 };

@@ -20,6 +20,7 @@
     createUser  创建用户ID ObjectId
     lastModifiedUser  最后编辑用户ID ObjectId
     isTop  是否置顶 Boolean
+    projectCode 代码编辑记录 Array
   }
   ```
 

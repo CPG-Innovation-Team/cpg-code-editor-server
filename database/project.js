@@ -27,6 +27,9 @@ const dbInsertProjectInfo = async (param) => projectInfoCollection().insertOne({
 
 const dbUpdateProjectInfo = async (queryParam, data) => projectInfoCollection().updateOne(queryParam, { $set: data });
 
+const dbUpdateProjectCode = async (queryParam, data) => {
+  projectInfoCollection().updateOne(queryParam, { $push: { projectCode: { $each: data.codeUpdate } } });
+};
 const dbFindProjectEdit = async (param) =>
   projectEditCollection()
     .aggregate([
@@ -59,6 +62,7 @@ module.exports = {
   dbFindProjectEdit,
   dbInsertProjectEdit,
   dbUpdateProjectEdit,
+  dbUpdateProjectCode,
   projectInfoCollection,
   projectEditCollection,
 };

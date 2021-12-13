@@ -1,5 +1,10 @@
 const { Server } = require('socket.io');
-const { saveClientProjectUpdateAndEmit, clientEnterProject, clientOffline } = require('./modules/project');
+const {
+  saveClientProjectUpdateAndEmit,
+  saveClientCodeUpdate,
+  clientEnterProject,
+  clientOffline,
+} = require('./modules/project');
 
 const socketExport = {};
 
@@ -30,14 +35,20 @@ socketExport.getSocketIO = (server) => {
     socket.on('clientUpdateProjectCode', async (socketRes) => {
       socket.join(socketRes.projectId);
       console.log(socketRes);
-      io.to(socketRes.projectId).emit('serverProjectCodeSync', socketRes);
+      const emitObject = await saveClientCodeUpdate(socketRes);
+      io.to(socketRes.projectId).emit('serverProjectCodeSync', emitObject);
+      // const emitObject = await saveClientCodeUpdate(socketRes);
+      // io.to(socketRes.projectId).emit('serverProjectCodeSync', emitObject);
     });
 
     socket.on('clientEnterProject', async (projectId, userId) => {
       socket.join(projectId);
-
       const emitObject = await clientEnterProject(projectId, userId, socket.id);
-      io.to(projectId).emit('serverProjectInfoSync', emitObject);
+      console.log('enter Project');
+      console.log(emitObject);
+      io.to(socket.id).emit('serverProjectInfoSync', emitObject);
+      // use two io to emit normal info and project code
+      // io.to(projectId).emit('serverProjectInfoSync', emitObject);
     });
   });
 };
