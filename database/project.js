@@ -27,6 +27,7 @@ const dbInsertProjectInfo = async (param) => projectInfoCollection().insertOne({
 
 const dbUpdateProjectInfo = async (queryParam, data) => projectInfoCollection().updateOne(queryParam, { $set: data });
 
+// editing db will be done here in the future
 const dbUpdateProjectCode = async (queryParam, data) => {
   projectInfoCollection().updateOne(queryParam, { $push: { projectCode: { $each: data.codeUpdate } } });
 };
