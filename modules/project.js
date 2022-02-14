@@ -159,6 +159,7 @@ const clientEnterProject = async (projectId, userId, socketId) => {
       userId,
       isOnline: true,
     },
+    editInfo: projectInfo[0].editInfo,
   };
 };
 
